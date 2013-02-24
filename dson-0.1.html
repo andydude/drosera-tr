@@ -1,0 +1,673 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US"><head><title>Drosera Object Notation (DSON) 0.1</title><style type="text/css">
+code           { font-family: monospace; }
+
+div.constraint,
+div.issue,
+div.note,
+div.notice     { margin-left: 2em; }
+
+ol.enumar      { list-style-type: decimal; }
+ol.enumla      { list-style-type: lower-alpha; }
+ol.enumlr      { list-style-type: lower-roman; }
+ol.enumua      { list-style-type: upper-alpha; }
+ol.enumur      { list-style-type: upper-roman; }
+
+
+div.exampleInner pre { margin-left: 1em;
+                       margin-top: 0em; margin-bottom: 0em}
+div.exampleOuter {border: 4px double gray;
+                  margin: 0em; padding: 0em}
+div.exampleInner { background-color: #d5dee3;
+                   border-top-width: 4px;
+                   border-top-style: double;
+                   border-top-color: #d3d3d3;
+                   border-bottom-width: 4px;
+                   border-bottom-style: double;
+                   border-bottom-color: #d3d3d3;
+                   padding: 4px; margin: 0em }
+div.exampleWrapper { margin: 4px }
+div.exampleHeader { font-weight: bold;
+                    margin: 4px}
+</style><link rel="stylesheet" type="text/css" href="DS.css"/></head><body><div class="head"><p><a href="http://www.w3.org/"><img src="head-DS.png" alt="Drosera"/></a></p>
+<h1><a name="title" id="title"/>Drosera Object Notation (DSON) 0.1</h1>
+<h2><a name="w3c-doctype" id="w3c-doctype"/>Drosera Specification 20 Dec 2009</h2><dl><dt>This version:</dt><dd>
+      <a href="dson-0.1.html">dson-0.1.html</a>
+    </dd><dt>Latest version:</dt><dd>
+      <a href="dro.html">dro.html</a>
+    </dd><dt>Editor:</dt><dd>Andrew Robbins <a href="">&lt;and_j_rob@yahoo.com&gt;</a></dd></dl><p class="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2009 Drosera, Inc. All Rights Reserved.</p></div><hr/><div>
+<h2><a name="id88745" id="id88745"/>Abstract</h2><p>
+	This specifies the definition of the Drosera Object Model (DSO) and three syntaxes:
+	Drosera Object Notation (DSON),
+	Drosera Object Strict Notation (DSOS), and
+	Drosera Object XML (DSOX).
+	Each syntax is isomorphic to the DSO model, which allows tools familiar with
+	a particular syntax to use data in another syntax by automatic translation.
+	The primary goal is perfect isomorphic conversion between different syntaxes
+	which helps promote one of the unifying principles of Drosera: <b>Homogeneity</b>.
+      </p><p>
+	The DSO model provides a homogeneous view of ad-hoc heterogeneous data.
+	Many problems solved by software in general is some kind of conversion from one
+	format into another. The DSO model is a single unified target for all of this diverse
+	data that tries to provide ways of storing metadata and type information in such a
+	way that is human-readable and human-writable (unlike XML).
+	Another part of the DSO model is the requirement that it be translatable to other formats
+	and syntaxes, but not in such a way that prevents storing metadata.
+	Since all the metadata of the original data can be stored directly in the DSO model,
+	it can be retrieved later if the data is changed and converted back into its original form.
+      </p></div><div>
+<h2><a name="status" id="status"/>Status of this Document</h2><p>
+	This specification is in draft status. When it becomes finalized, 
+	it will change to 0.9a, 0.9b, then when most of the defects have 
+	been worked out, it will become version 1.0.
+      </p></div><div class="toc">
+<h2><a name="contents" id="contents"/>Table of Contents</h2><p class="toc">1 <a href="#frontmatter">Front Matter</a><br/>
+    1.1 <a href="#scope">Scope</a><br/>
+    1.2 <a href="#conformance">Conformance</a><br/>
+        1.2.1 <a href="#id88843">Documents</a><br/>
+        1.2.2 <a href="#id88900">Processors</a><br/>
+2 <a href="#introduction">Introduction</a><br/>
+    2.1 <a href="#id89039">Tags vs. Types</a><br/>
+    2.2 <a href="#id89165">Keys vs. Names</a><br/>
+3 <a href="#abstract">Abstract Model</a><br/>
+    3.1 <a href="#id89197">Numbers</a><br/>
+        3.1.1 <a href="#id89270">Numeric Tower</a><br/>
+        3.1.2 <a href="#id89639">Rational Numbers</a><br/>
+        3.1.3 <a href="#id89661">Complex Numbers</a><br/>
+    3.2 <a href="#id89707">Strings</a><br/>
+    3.3 <a href="#id89732">Symbols</a><br/>
+        3.3.1 <a href="#id89917">Null</a><br/>
+        3.3.2 <a href="#id89942">Booleans</a><br/>
+    3.4 <a href="#id89964">Sequences</a><br/>
+    3.5 <a href="#id90011">Tags and Types</a><br/>
+    3.6 <a href="#id90021">Attributions</a><br/>
+    3.7 <a href="#id90030">References</a><br/>
+    3.8 <a href="#id90040">Functions</a><br/>
+    3.9 <a href="#id90050">Formal DSO Definition</a><br/>
+4 <a href="#concrete-syntax">Concrete Syntax</a><br/>
+    4.1 <a href="#id90180">JSON Syntax</a><br/>
+    4.2 <a href="#id90423">YAML Syntax</a><br/>
+    4.3 <a href="#id90436">DSON Syntax</a><br/>
+    4.4 <a href="#id90600">DSOX Syntax</a><br/>
+        4.4.1 <a href="#id90624">Numbers</a><br/>
+        4.4.2 <a href="#id90645">Strings</a><br/>
+        4.4.3 <a href="#id90670">Symbols</a><br/>
+        4.4.4 <a href="#id90681">Sequences</a><br/>
+        4.4.5 <a href="#id90789">Dictionaries</a><br/>
+</p>
+<h3><a name="appendices" id="appendices"/>Appendices</h3><p class="toc">A <a href="#id90890">Glossary</a><br/>
+B <a href="#id91298">Indices</a><br/>
+    B.1 <a href="#id91303">Index of XML Attributes</a><br/>
+    B.2 <a href="#id91310">Index of XML Elements</a><br/>
+    B.3 <a href="#id91317">Index of RDF Properties</a><br/>
+    B.4 <a href="#index-types">Index of Drosera Types</a><br/>
+C <a href="#id91779">Conversions</a><br/>
+    C.1 <a href="#id91785">Conversion to XML Infoset</a><br/>
+    C.2 <a href="#id91795">Conversion from XML Infoset</a><br/>
+    C.3 <a href="#id91802">Conversion to RDF Triples</a><br/>
+    C.4 <a href="#id91809">Conversion from RDF Triples</a><br/>
+    C.5 <a href="#id91816">Conversion to OpenMath</a><br/>
+    C.6 <a href="#id91822">Conversion from OpenMath</a><br/>
+    C.7 <a href="#id91829">Conversion to Strict Content MathML</a><br/>
+    C.8 <a href="#id91837">Conversion from Strict Content MathML</a><br/>
+    C.9 <a href="#id91844">YAML</a><br/>
+        C.9.1 <a href="#id91849">Converting DSON to YAML</a><br/>
+        C.9.2 <a href="#id91869">Converting YAML to DSON</a><br/>
+D <a href="#id91891">IDL for DSON</a><br/>
+</p></div><hr/><div class="body"><div class="div1">
+<h2><a name="frontmatter" id="frontmatter"/>1 Front Matter</h2><p>
+      </p><div class="div2">
+<h3><a name="scope" id="scope"/>1.1 Scope</h3><p>
+	  The scope of this document is about DSON documents,
+	  and the interface between DSON documents and DSON processors.
+	  The primary scope is the definition of a <b>well-formed</b>
+	  <a title="" href="#dsondocs">DSON document</a>.
+	  Validation and interpretation are outside the
+	  scope of this specification.
+	</p></div><div class="div2">
+<h3><a name="conformance" id="conformance"/>1.2 Conformance</h3><p>
+	  Few restrictions are placed on DSON processors.
+	  Most of the conformance criteria are for DSON documents
+	  themselves. 
+	</p><div class="div3">
+<h4><a name="id88843" id="id88843"/>1.2.1 Documents</h4><p>
+	    There are two levels of conformance.
+	    A <a title="" href="#dsondocs">DSON document</a>
+	    is considered <b>well-formed</b> if it passes the syntax
+	    set forth in this specification. Additionally,
+	    a <a title="" href="#dsondocs">DSON document</a>
+	    is considered <b>valid</b> if it can be turned
+	    into an abstract syntax tree, and the corresponding
+	    tree meets all of the requirements of the types
+	    associated with each node. Validation is beyond the
+	    scope of this document, so although we may refer
+	    to <b>valid</b> documents, every reference
+	    is non-normative, but may become normative in
+	    a different specification.
+	  </p><p>
+	    There are two kinds of <b>well-formedness</b> defined
+	    in this specification. Generally a well-formed
+	    DSON document is any document that matches <em>all</em> of
+	    the syntax productions given in this specification, but
+	    a <b>well-formed Strict DSON document</b> is a document
+	    that only matches those syntax productions marked "strict".
+	  </p></div><div class="div3">
+<h4><a name="id88900" id="id88900"/>1.2.2 Processors</h4><p>
+	    A <a title="" href="#dsonproc">DSON processor</a> 
+	    conforms to this specification if it accepts well-formed
+	    <a title="" href="#dsondocs">DSON documents</a>,
+	    and/or produces well-formed
+	    <a title="" href="#dsondocs">DSON documents</a>.
+	    It does not need to do any validation in order to be
+	    conformant.
+	  </p></div></div></div><div class="div1">
+<h2><a name="introduction" id="introduction"/>2 Introduction</h2><p>
+	This specification defines DSON in two parts: abstract model (DSO) and 
+	concrete syntax (DSON, DSOS, DSOX, etc.).
+	The DSO model can be considered a subset and/or superset of the RDF model,
+	which itself can have several interpretations. Although this definition of the DSO model
+	is not normative, it is discussed here for informative purposes only.
+      </p><p>
+	RDF represents all data as a graph, which is a set of <b>Triples</b>.
+	Each triple in RDF must obey certain rules in order to be considered valid.
+	A triple such as <code>(http://example.com/this, http://example.com/name, "John Doe")</code>
+	is only a valid triple if "http://example.com/name" is a property, that is there is another triple
+	<code>(http://example.com/name, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/1999/02/22-rdf-syntax-ns#Property)</code> in the graph as well.
+	One of the limitations of RDF is that it does not allow arbitrary data in the first two fields,
+	both must be URI's (but the first may be a "blank node", refered to here as a <code>Name</code>).
+	This is where the DSO model and the RDF model diverge.
+      </p><p>
+	An RDF-compatible interpretation of DSO data is that all DSO data consists of triples of the form:
+      </p><div class="exampleInner"><pre>(Symbol, Symbol, Symbol|Value)</pre></div><p>
+	with the restriction that the middle field is not null.
+      </p><p>
+	Another feature of RDF is that it represents two complex objects as primitives.
+	This is another difference between DSO and RDF:
+      </p><ul><li>RDF text: <code>"hello"@en</code> is represented in DSO as</li><div class="exampleInner"><pre>(_:x, xml:lang, "en")
+(_:x, rdf:value, "hello")</pre></div><li>typed literals: <code>"3.14"^^xs:double</code> is represented in DSO as</li><div class="exampleInner"><pre>(_:y, rdf:type, xs:double)
+(_:y, rdf:value, "3.14")</pre></div></ul><p>
+	By making RDF subjects and predicates accept more values, the DSO model can encode many more
+	datasets than RDF can, since <code>Symbols</code> can encode URIs, QNames, and simple Names.
+      </p><div class="div2">
+<h3><a name="id89039" id="id89039"/>2.1 Tags vs. Types</h3><p>
+	  There are many differences the DSO model and XML Infoset model. One
+	  similarity is that for each node (or Element in the XML Infoset model) there is
+	  a unique property or attribute that is set aside for determining what kind of
+	  information comes next. A <b>tag</b> is used in XML, and a <b>type</b> is
+	  used in DSON (and other systems, such as Mathematica (called the <b>head</b>) and Haskell
+	  (called the <b>data constructor</b>)). In an ideal world, there would be a one-to-one
+	  correspondance between tags and types, but established practice has diverged from this ideal.
+	</p><p>
+	  One way that tags and types are different is a simply renaming the type.
+	  This can be illustrated by comparing XML and the DOM that is 
+	  associated with it. The XML <code>&lt;em&gt;Hello&lt;/em&gt;</code> might be written with the 
+	  DOM-building JavaScript:
+	  <div class="exampleInner"><pre>var em_elem = document.createElement("em");
+em_elem.appendChild(document.createTextNode("Hello"));</pre></div>
+	  Note that the <b>type</b> of <code>em_elem</code> is <code>HTMLElement</code>, not <code>em</code>,
+	  and the <b>tag</b> (or tagName, to be precise) of <code>em_elem</code> is <code>em</code>,
+	  not <code>HTMLElement</code>. This distinction prevents us from thinking of tags and types as the same.
+	</p><p>
+	  Another place where tags and types diverge is in MathML. The <code>cn</code> tag can correspond to
+	  multiple types depending on its <code>type</code> attribute, and conversely, the <code>Number</code>
+	  type can be written with different OpenMath tags, 
+	  such as <code>&lt;OMI &gt;...&lt;/OMI&gt;</code>
+	  or <code>&lt;OMF&gt;...&lt;/OMF&gt;</code> depending on 
+	  whether the number is actually Integer or Decimal.
+	  This prevents us from having one-to-many and many-to-one conversions
+	  as we must consider many-to-many conversions as well.
+	</p><p>
+	  This is not to say that one-to-one mappings are not possible, they certainly are.
+	  For example, one could assert the <code>Person</code> type and the <code>foaf:Person</code> tag
+	  to be the same thing, so that the conversion between the two would be virtually trivial.
+	</p></div><div class="div2">
+<h3><a name="id89165" id="id89165"/>2.2 Keys vs. Names</h3></div></div><div class="div1">
+<h2><a name="abstract" id="abstract"/>3 Abstract Model</h2><p>
+	Abstract model is the model that must be satisfied by all serialization formats.
+	This is where we consider the domain of legal DSON objects, as opposed to documents or types.
+      </p><p>
+	x
+      </p><div class="div2">
+<h3><a name="id89197" id="id89197"/>3.1 Numbers</h3><p>
+	The <code>Number</code> type has the same
+	<b>lexical space</b> as JSON numbers, 
+	but has more constructors than in JSON, and so
+	it has a much larger <b>value space</b>,
+	which includes <code>Rational</code> numbers,
+	and <code>Complex</code> numbers. 
+	Numbers can be constructed by Number literals,
+	such as 1.0, 42, 6.02e23, and so on, but may also be
+	constructed by typed strings. Numbers that
+	can be represented with JSON syntax should be,
+	with one exception. Numbers that have more precision
+	than would fit in an <code>Int32</code> or <code>Float64</code>
+	should be represented with a typed <code>String</code>.
+	For example:
+	</p><div class="exampleInner"><pre>!Integer "1340780792994259709957402499820"
+         "5846127479365820592393377723561"
+	 "4437217640300735469768018742981"
+	 "6690342769003185818648605085375"
+	 "3882811946569946433649006084096"</pre></div><p>
+	  The strings in the above example are concatenated 
+	  into a single string, and that unified string
+	  is then prefixed with a type attribution, which
+	  states that the string is of type <code>Integer</code>.
+	  Constructing numbers from other objects was one of the
+	  primary design goals behind DSON. One can also construct
+	  other types of Numbers with type attributions, such as
+	  <code>!Rational [22, 7]</code>, or
+	  <code>!Complex.rect [0, 1]</code>.
+	</p><div class="div3">
+<h4><a name="id89270" id="id89270"/>3.1.1 Numeric Tower</h4><table><thead><th>Components</th><th>Type</th><th>Lexical Space</th><th>Description</th></thead><tbody><tr><td>frac</td><td><code>Clamp</code></td><td><code>.#|0|1</code></td><td>Represents real numbers between 0 and 1</td></tr><tr><td>frac, exp</td><td><code>Scale</code></td><td><code>.#e-?#</code></td><td>Represents non-negative real numbers</td></tr><tr><td>sign, frac, exp</td><td><code>Float</code></td><td><code>-?.#e-?#</code></td><td>Naturally maps to IEEE floating-point types</td></tr><tr><td>nat</td><td><code>Natural</code></td><td><code>#</code></td><td>Represents non-negative integers</td></tr><tr><td>sign, nat</td><td><code>Integer</code></td><td><code>-?#</code></td><td>Represents integers</td></tr><tr><td>int, exp</td><td><code>Intimal</code></td><td><code>-?#e-?#</code></td><td>Represents real numbers with precision</td></tr><tr><td>int, frac</td><td><code>Decimal</code></td><td><code>-?#.#</code></td><td>Represents real numbers w/o exponent</td></tr><tr><td>int, frac, exp</td><td><code>Floating</code></td><td><code>-?#.#e-?#</code></td><td>Represents real numbers.</td></tr></tbody></table><p>
+	    It should be noted that Types are primarily for validation, but may
+	    also be used for serialization and deserialization. Since validation
+	    is beyond the scope of this specification, these types are not required
+	    to be recognized by a <a title="" href="#dsonproc">DSON processor</a>.
+	    Types that SHOULD be recognized for deserialization purposes are
+	    <code>Natural</code>, <code>Integer</code>, and <code>Floating</code>.
+	  </p></div><div class="div3">
+<h4><a name="id89639" id="id89639"/>3.1.2 Rational Numbers</h4><p>
+	    Rational numbers are represented with a pair prefixed with the type annotation <code>Rational</code>.
+	    For example:
+	  </p><div class="exampleInner"><pre>!Rational [22, 7]</pre></div></div><div class="div3">
+<h4><a name="id89661" id="id89661"/>3.1.3 Complex Numbers</h4><p>
+	    Complex numbers are represented with a pair prefixed with one of the following type annotations:
+	  </p><div class="exampleInner"><pre>!Complex.rect [1, 1]</pre></div><div class="exampleInner"><pre>!Complex.polar [1.41421, 0.785398]</pre></div><p>
+	    Both represent the complex number (1 + 1i), with different precisions, of course.
+	  </p><p>
+	    Another thing allowed by polar representation that is not possible with rectangular representation
+	    of complex numbers is the concepts of directed infinities and complex infinity (the infinity
+	    whose neighbors include +oo and -oo). For example (+oo i) can be represented by
+	    <code>!Complex.polar [infinity, pi/2]</code>, and complex infinity can be represented by
+	    <code>!Complex.polar [infinity, null]</code>.
+	  </p></div></div><div class="div2">
+<h3><a name="id89707" id="id89707"/>3.2 Strings</h3><p>
+	  There are two kinds of strings in DSON:
+	  <code>Binary</code> and <code>String</code>.
+	  The first is a sequence of bytes (0-0xFF),
+	  and the second is a sequence of characters (0-0x10FFFF).
+	  As mentioned above, strings can be split up into parts,
+	  each of which can be separated by whitespace.
+	</p><p>
+	  
+	</p></div><div class="div2">
+<h3><a name="id89732" id="id89732"/>3.3 Symbols</h3><p>
+	  There are three kinds of symbols in DSON:
+	  <code>Name</code>, <code>URI</code>, and <code>QName</code>.
+	  Symbols are characterized by two fields:
+	  <code>@iri</code> and <code>@name</code>.
+	  Which subtype they are an instance of is dependant only
+	  on which of these fields is used.
+	</p><dl><dt class="label"><code>Null</code></dt><dd>
+	      A symbol that has neither field set. 
+	      This may be constructed with <code>~</code> or <code>null</code> or <code>!Null []</code>.
+            </dd><dt class="label"><code>Name</code></dt><dd>
+	      A symbol that has its <code>@name</code> field set.
+	      This may be constructed in the obvious manner: <code>myVar</code> or <code>!Name "mySym"</code>.
+            </dd><dt class="label"><code>URI</code></dt><dd>
+	      A symbol that has its <code>@iri</code> field set.
+	      For example: <code>!URI "http://example.com/"</code></dd><dt class="label"><code>QName</code></dt><dd>
+	      A symbol with both fields set. For example: <code>!QName ["http://example.com/", "thing"]</code></dd><dt class="label"><code>Symbol</code></dt><dd>
+	      A symbol with either field set. This may be used when the parameter is not
+	      a sequence but a dictionary, for example: <code>!Symbol {name: "myVar"}</code></dd></dl><p>
+	  In Haskell, Symbols would have the type definition:
+	</p><div class="exampleInner"><pre>data Symbol = Symbol {
+  iri  :: Maybe String,
+  name :: Maybe String }</pre></div><p>
+	  It may be confusing that <code>Symbol</code> appears to be the only type in DSON and
+	  Droscript that has optional parameters. Since it is so fundamental to everything else
+	  it should be clear that no parameters are optional. The <code>Symbol</code> type should
+	  be considered as an algebraic datatype with four constructors: Null, Name, URI, and QName.
+	  Each constructor may only fill in some of the members of this type, but each constructor
+	  MUST be given all of its parameters. Name and URI take 1 argument, and QName takes 2 arguments.
+	  If any of these arguments are missing or cannot be infered, 
+	  a <a title="" href="#">DSON processor</a> 
+	  MAY make a warning, but preferably it SHOULD error.
+	</p><p>
+	  The reason why IRI's were chosen as the internal model for <code>Symbol</code>s is that
+	  they are supposed to be stored as <code>String</code>s, which are supposed to be
+	  capable of storing any Unicode characters. Since URI's are generally stored in ASCII strings,
+	  they must escape any non-ASCII characters, but since Unicode strings don't have this limitation,
+	  it is recommended that the internal storage of any URL/URN/URI/IRI be that of a Unicode string.
+	</p><div class="div3">
+<h4><a name="id89917" id="id89917"/>3.3.1 Null</h4><p>
+	    In the DSON model, <code>null</code> is special in that it does not correspond to
+	    the symbol constructed with <code>!Name "null"</code>, but it corresponds to the
+	    symbol <code>!Null []</code>. This means that neither the @iri nor the @name field
+	    are set. It is the symbol without any location or name.
+	  </p></div><div class="div3">
+<h4><a name="id89942" id="id89942"/>3.3.2 Booleans</h4><p>
+	    In the DSON model, booleans are special symbols, but they are still just symbols.
+	    The symbols <code>true</code> and <code>false</code> correspond to boolean values in the obvious manner.
+	  </p></div></div><div class="div2">
+<h3><a name="id89964" id="id89964"/>3.4 Sequences</h3><p>
+	  There are two kinds of sequences in DSON:
+	  <code>Seq</code> (ordered) and <code>Bag</code> (unordered).
+	  The reason why the name <code>Seq</code> is used is because
+	  other similar terms refer to more advanced types.
+	  <code>List(t)</code> is a parametric type which represents
+	  homogeneous sequences of a given type, and <code>Array</code>
+	  represents multidimensional rectangular arrays. Even more
+	  advanced types are possible, such as <code>Tuple(3)</code>
+	  and <code>Vector(4, Integer)</code>, but since these
+	  would be used for advanced validation, they are beyond
+	  the scope of this specification.
+	</p><p>
+	  
+	</p></div><div class="div2">
+<h3><a name="id90011" id="id90011"/>3.5 Tags and Types</h3><p>
+	</p></div><div class="div2">
+<h3><a name="id90021" id="id90021"/>3.6 Attributions</h3><p>
+	</p></div><div class="div2">
+<h3><a name="id90030" id="id90030"/>3.7 References</h3><p>
+	</p></div><div class="div2">
+<h3><a name="id90040" id="id90040"/>3.8 Functions</h3><p>
+	</p></div><div class="div2">
+<h3><a name="id90050" id="id90050"/>3.9 Formal DSO Definition</h3><p>
+	  This section is <b>normative</b>.
+	</p><p>
+	  A DSO object is a triple of the form: 
+	  (<em>type</em> : <b>Symbol</b>, 
+	   <em>metadata</em> : <b>Pairs</b>, 
+	   <em>value</em>).
+	  A DSO symbol is a triple of the form:
+	  (<em>metadata</em> : <b>Pairs</b>, 
+	   <em>location</em> : <b>String</b>,
+	   <em>name</em> : <b>String</b>).
+	  A DSO value may be one of the following types:
+	   <ul><li><code>Real</code> -- a real number probably represented in JSON number syntax</li><li><code>Binary</code> -- a sequence of bytes (0-0xFF)</li><li><code>String</code> -- a sequence of characters (0-0x10FFFF)</li><li><code>Symbol</code> -- a DSO symbol</li><li><code>Seq</code> -- a sequence</li><li><code>Bag</code> -- a sequence (unordered), also known as a multi-set</li><li><code>Pair</code> -- a pair representing a key and a value</li><li><code>Link</code> -- a link referencing another object</li></ul>
+	</p></div></div><div class="div1">
+<h2><a name="concrete-syntax" id="concrete-syntax"/>4 Concrete Syntax</h2><p>
+	The DSON object model has four concrete syntaxes: 
+	JSON, YAML, DSON (text), and DSOX (XML).
+      </p><div class="div2">
+<h3><a name="id90180" id="id90180"/>4.1 JSON Syntax</h3><p>
+	  The JSON Syntax for Drosera Objects is written primary in the 'object' notation.
+	  To do this, special dictionary keys are used. These dictionary keys
+	  correspond to RDF properties, but are written in a shorthand notation
+	  for brevity.
+	</p><table border="1"><thead><th>Key</th><th>Description</th></thead><tbody><tr><td>
+		<code>@apply</code>
+	      </td><td>
+		Used for MathML apply functions.
+	      </td></tr><tr><td>
+		<code>@args</code>
+	      </td><td>
+		Used for MathML apply arguments.
+	      </td></tr><tr><td>
+		<code>@bind</code>
+	      </td><td>
+		Used for MathML bind operators.
+	      </td></tr><tr><td>
+		<code>@bvars</code>
+	      </td><td>
+		Used for MathML bind variables.
+	      </td></tr><tr><td>
+		<code>@type</code>
+	      </td><td>
+		Used for typed values (!T x)
+	      </td></tr><tr><td>
+		<code>@name</code>
+	      </td><td>
+		Used for names that have been assigned to values.
+	      </td></tr><tr><td>
+		<code>@key</code>
+	      </td><td>
+		Used for dictionary keys.
+	      </td></tr><tr><td>
+		<code>@name</code>
+	      </td><td>
+		Used for names that have been assigned to values.
+	      </td></tr><tr><td>
+		<code>@name</code>
+	      </td><td>
+		Used for names that have been assigned to values.
+	      </td></tr></tbody></table></div><div class="div2">
+<h3><a name="id90423" id="id90423"/>4.2 YAML Syntax</h3><p>
+	  Since DSON was designed as an extension of YAML, very little translation goes on between the two. The only difference is in how attributions are handled.
+	</p></div><div class="div2">
+<h3><a name="id90436" id="id90436"/>4.3 DSON Syntax</h3><p>
+	  The DSON syntax is defined by translation to JSON.
+	</p><table border="1"><thead><th>Grammar</th><th>JSON syntax</th></thead><tbody><tr><td><code>A = B</code></td><td><code>{"@name": A, "@value": B}</code></td></tr><tr><td><code>A: B</code></td><td><code>{"@key": A, "@value": B}</code></td></tr><tr><td><code>@{A...} B</code></td><td><code>{A..., "@value": B}</code></td></tr><tr><td><code>!A B</code></td><td><code>{"@type": A, "@value": B}</code></td></tr><tr><td><code>A(B...)</code></td><td><code>{"@apply": A, "@args": [B...]}</code></td></tr><tr><td><code>A|B...| C</code></td><td><code>{"@bind": A, "@bvars": [B...], "@value": C}</code></td></tr></tbody></table></div><div class="div2">
+<h3><a name="id90600" id="id90600"/>4.4 DSOX Syntax</h3><p>
+	  The DSOX syntax is a mixture of two namespaces, which will be used frequently
+	  in this sections, so they are listed below for reference:
+	</p><div class="exampleInner"><pre>namespaces:
+  m:  "http://www.w3.org/1998/Math/MathML"
+  ds: "http://www.droscript.org/2010/DSON"</pre></div><p>
+	  We will go through one by one to see how things are represented in this syntax.
+	</p><div class="div3">
+<h4><a name="id90624" id="id90624"/>4.4.1 Numbers</h4><p>
+	    <code>Number</code>s are represented with <code>m:cn</code> and <code>ds:type</code>.
+	  </p></div><div class="div3">
+<h4><a name="id90645" id="id90645"/>4.4.2 Strings</h4><p>
+	    <code>String</code> strings are represented with <code>m:cs</code> and
+	    <code>Binary</code> strings are represented with <code>m:cbytes</code>.
+	  </p></div><div class="div3">
+<h4><a name="id90670" id="id90670"/>4.4.3 Symbols</h4><p>
+	    Symbols are represented with QNames.
+	  </p></div><div class="div3">
+<h4><a name="id90681" id="id90681"/>4.4.4 Sequences</h4><p>
+	    Sequences are represented with a combination of <code>m:list</code> and <code>ds:type</code>.
+	  </p><table border="1"><thead><th>DSOX</th><th>DSON</th></thead><tbody><tr><td>
+		  <div class="exampleInner"><pre>&lt;m:list ds:type="Seq"&gt;
+  &lt;m:cn&gt;1&lt;/m:cn&gt;
+  &lt;m:cn&gt;2&lt;/m:cn&gt;
+  &lt;m:cn&gt;3&lt;/m:cn&gt;
+&lt;/m:list&gt;</pre></div>
+		</td><td>
+		  <div class="exampleInner"><pre>[1, 2, 3]</pre></div>
+		</td></tr><tr><td>
+		  <div class="exampleInner"><pre>&lt;m:set ds:type="Bag"&gt;
+  &lt;m:cn&gt;1&lt;/m:cn&gt;
+  &lt;m:cn&gt;2&lt;/m:cn&gt;
+  &lt;m:cn&gt;3&lt;/m:cn&gt;
+&lt;/m:set&gt;</pre></div>
+		</td><td>
+		  <div class="exampleInner"><pre>{1, 2, 3}</pre></div>
+		</td></tr></tbody></table></div><div class="div3">
+<h4><a name="id90789" id="id90789"/>4.4.5 Dictionaries</h4><p>
+	    Dictionaries are represented with a combination of <code>m:set</code> and <code>ds:pair</code>.
+	  </p><table border="1"><thead><th>DSOX</th><th>DSON</th></thead><tbody><tr><td>
+		  <div class="exampleInner"><pre>&lt;m:set ds:type="Dict"&gt;
+  &lt;ds:pair&gt;
+    &lt;m:csymbol&gt;<b>name</b>&lt;/m:csymbol&gt;
+    &lt;m:cs&gt;<b>John Doe</b>&lt;/m:cs&gt;
+  &lt;ds:pair&gt;
+  &lt;ds:pair&gt;
+    &lt;m:csymbol&gt;<b>telephone</b>&lt;/m:csymbol&gt;
+    &lt;m:cs&gt;<b>555-5555</b>&lt;/m:cs&gt;
+  &lt;ds:pair&gt;
+&lt;/m:set&gt;</pre></div>
+		</td><td>
+		  <div class="exampleInner"><pre>{name: "John Doe", telephone: "555-5555"}</pre></div>
+		</td></tr></tbody></table></div></div></div></div><div class="back"><div class="div1">
+<h2><a name="id90890" id="id90890"/>A Glossary</h2><dl><dt class="label">[<a name="dsondocs" id="dsondocs" title="">Definition</a>: DSON document]</dt><dd>
+	    A text document encoded in UTF-8 or UTF-16, which matches the productions
+	    given in section (??). The top-level production can be any value, but will
+	    probably be a <code>Seq</code> or a <code>Dict</code>.
+	  </dd><dt class="label">[<a name="dsonproc" id="dsonproc" title="">Definition</a>: DSON processor]</dt><dd>
+	    A program which reads or writes DSON documents, in one of the following
+	    syntax forms: JSON, YAML, DSON, or DSOX. This effectively makes all
+	    JSON and YAML processors conforming DSON processors as well.
+	  </dd><dt class="label">[<a name="classtype" id="classtype" title="">Definition</a>: class type]</dt><dd>
+	    A <b>class type</b> is a <a title="" href="#lens">lens</a> 
+	    from <a title="" href="#predicate">predicates</a> to the type system.
+	    Every <a title="" href="#predicate">predicate</a> can be used to define a type. 
+	    Every type has an associated <a title="" href="#memberpred">member predicate</a> 
+	    that can be used to test to see if
+	    an object is a member of that type. Additionally, <b>class type</b>s
+	    can define a <a title="" href="#subclasspred">subclass predicate</a> 
+	    to test whether another type is a subclass.
+	  </dd><dt class="label">[<a name="memberpred" id="memberpred" title="">Definition</a>: member predicate]</dt><dd>
+	    A <a title="" href="#predicate">predicate</a> used to determine membership.
+	  </dd><dt class="label">[<a name="subclasspred" id="subclasspred" title="">Definition</a>: subclass predicate]</dt><dd>
+	    A <a title="" href="#predicate">predicate</a> used to determine subclasses.
+	  </dd><dt class="label">[<a name="predicate" id="predicate" title="">Definition</a>: predicate]</dt><dd>
+	    A <b>predicate</b> is a function that returns a <code>Bool</code>.
+	  </dd><dt class="label">[<a name="property" id="property" title="">Definition</a>: property]</dt><dd>
+	    A <b>property</b> is a relation between pairs of nodes.
+	    confusing function/relation/predicate stuff!!!
+	  </dd><dt class="label">[<a name="formattype" id="formattype" title="">Definition</a>: format type]</dt><dd>
+	    A <b>format type</b> is a <a title="" href="#lens">lens</a>
+	    from <code>Integer</code>, <code>Binary</code>, or <code>String</code> to a <b>model type</b>.
+	    There are a few built-in examples of format types:
+	    <ul><li><code>Binary.hex</code></li>
+	      A <a title="" href="#">parser</a> for the <code>Binary</code> type.
+	    </ul></dd><dt class="label">[<a name="modeltype" id="modeltype" title="">Definition</a>: model type]</dt><dd>
+	    A <b>model type</b> is a <a title="" href="#lens">lens</a>
+	    from <code>Dict</code> to the type system.
+	    In general, these are known as algebraic datatypes.
+
+	    The <a title="" href="#memberpred">member predicate</a> of all model types
+	    is whether or not it was constructed with this particular model's constructors,
+	    and the arity and types match.
+
+	    Each constructor can be considered as a subclass of the model type it constructs.
+	    The <a title="" href="#subclasspred">subclass predicate</a> of all model types
+	    is limited to those subclasses automatically created by its constructors.
+	    The constructor subclasses are written as 
+	    <code>ConstructedBy(hex)</code> in Droscript.
+	  </dd><dt class="label">[<a name="modelcon" id="modelcon" title="">Definition</a>: model constructor]</dt><dd>
+	    A <b>model constructor</b> is constructed by a <a title="" href="#lens">lens</a>
+	    from <code>Seq</code> to <code>Dict</code>, more traditionally known
+	    as product types, record types, or struct types. Basically, 
+	    it gives names to elements of the <code>Seq</code>.
+	    Note: the names given may be (_1, _2, _3, ...) which is the identity transform if
+	    sequences are represented as RDF triples. 
+	    See The RDF Syntax Specification for more information.
+	  </dd><dt class="label">[<a name="type" id="type" title="">Definition</a>: type]</dt><dd>
+	    A type is an instance of exactly one of the following: Class, Format, or Model.
+	  </dd><dt class="label">[<a name="lens" id="lens" title="">Definition</a>: lens]</dt><dd>
+	    A <b>lens</b> is a one-to-one and onto (bijective) function. When we use this term,
+	    we use it loosely. For formal usage, we refer to the <code>Lens(a)b</code> function type.
+	    This term is borrowed from the Boomerang programming language.
+	  </dd><dt class="label">Module</dt><dd/></dl></div><div class="div1">
+<h2><a name="id91298" id="id91298"/>B Indices</h2><div class="div2">
+<h3><a name="id91303" id="id91303"/>B.1 Index of XML Attributes</h3></div><div class="div2">
+<h3><a name="id91310" id="id91310"/>B.2 Index of XML Elements</h3></div><div class="div2">
+<h3><a name="id91317" id="id91317"/>B.3 Index of RDF Properties</h3><p>
+	  Replacements:
+	</p><table><tbody><tr><td><b>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</b></td><td><code>"@type"</code></td><td>Used extensively in the JSON encoding</td></tr><tr><td><b>http://www.w3.org/1999/02/22-rdf-syntax-ns#value</b></td><td><code>"@value"</code></td><td>Used extensively in the JSON encoding</td></tr><tr><td><b>http://purl.org/dc/terms/format</b></td><td><code>"@format"</code></td><td>Used for binary string format in JSON encoding.</td></tr></tbody></table></div><div class="div2">
+<h3><a name="index-types" id="index-types"/>B.4 Index of Drosera Types</h3><p>
+          These are the types:
+        </p><dl><dt class="label"><code>Any</code></dt><dd>
+              A <b>class type</b> which is a supertype of all other types.
+            </dd><dt class="label"><code>Null</code></dt><dd>
+              A <b>model type</b> with one constructor: <code>null</code>.
+            </dd><dt class="label"><code>Bool</code></dt><dd>
+              A <b>model type</b> with two constructors: <code>true</code>, and <code>false</code>.
+            </dd><dt class="label"><code>Seq</code></dt><dd>
+              A <b>class type</b> which is a supertype of <em>at least</em>:
+              <code>Tuple</code>, <code>Vector</code>, <code>Cons</code>, and <code>List</code>.
+              The <code>Seq</code> type corresponds to JSON 'array' type.
+            </dd><dt class="label"><code>Dict</code></dt><dd>
+              A <b>class type</b> which is a supertype of <em>at least</em>: 
+              <code>Map</code> and <code>Property</code>.
+              The <code>Dict</code> type corresponds to the JSON 'object' type.
+            </dd><dt class="label"><code>Number</code></dt><dd>
+              A <b>class type</b> which is a supertype of <em>at least</em>:
+              <code>Integer</code> and <code>Decimal</code>.
+            </dd><dt class="label"><code>Binary</code></dt><dd>
+              A <b>model type</b> with two constructors: <code>hex</code> and <code>base64</code>.
+              As a <b>model type</b>, there is an underlying sequence, 
+              which is a <code>List(Byte)</code>.
+              <code>Binary</code> does not have a corresponding JSON type.
+            </dd><dt class="label"><code>String</code></dt><dd>
+              A <b>model type</b> with one constructor: <code>"..."</code>.
+              As a <b>model type</b>, there is an underlying sequence, 
+              which is a <code>List(Char)</code>.
+            </dd><dt class="label"><code>Symbol</code></dt><dd>
+              A <b>model type</b> with one constructor: <code>symbol</code>.
+              The <code>Symbol</code> type corresponds (but not exactly) to the JSON 'string' type.
+              As a <b>model type</b>, there is an underlying sequence,
+              which is a <code>Tuple(2)</code>, along with the attributes <code>'cd'</code> or <code>'prefix'</code>,
+              which are not part of the model, but external attributes specifically designed for
+              lossless conversion to and from OpenMath and XML data, respectively. All fields are optional, 
+              which gives 6 constructors including the <code>'prefix'</code> attribute.
+              <ul><li><code>{"@name": "mySym"}</code></li>
+        	A simple local name.
+        	<li><code>{"@iri": "http://example.com/"}</code></li>
+        	A URI symbol (stored as an IRI since strings can contain Unicode).
+        	<li><code>{"@iri": "http://example.com/", "@name": "mySym"}</code></li>
+        	An XML QName model object.
+        	<li><code>{"prefix": "myNS", "@name": "mySym"}</code></li>
+        	An XML QName reference.
+        	<li><code>{"prefix": "myNS", "@iri": "http://example.com/"}</code></li>
+        	An XML QName prefix definition.
+        	<li><code>{"prefix": "myNS", "@iri": "http://example.com/", "@name": "mySym"}</code></li>
+        	An XML QName reference with prefix definition included.
+              </ul>
+              The <code>'cd'</code> attribute can also be used with the <code>Symbol</code> type,
+              which is useful for representing OpenMath symbols. 
+	      OpenMath symbols can be written as one of the following.
+              <ul><li><code>{"@iri": "http://www.openmath.org/cd/nums1#e"}</code></li>
+        	The standard mapping from OpenMath symbols to URIs.
+        	<li><code>{"@iri": "http://www.openmath.org/cd", "cd": "nums1", "@name": "e"}</code></li>
+        	The model object associated with OpenMath symbols.
+              </ul></dd></dl></div></div><div class="div1">
+<h2><a name="id91779" id="id91779"/>C Conversions</h2><div class="div2">
+<h3><a name="id91785" id="id91785"/>C.1 Conversion to XML Infoset</h3><p>
+	</p></div><div class="div2">
+<h3><a name="id91795" id="id91795"/>C.2 Conversion from XML Infoset</h3></div><div class="div2">
+<h3><a name="id91802" id="id91802"/>C.3 Conversion to RDF Triples</h3></div><div class="div2">
+<h3><a name="id91809" id="id91809"/>C.4 Conversion from RDF Triples</h3></div><div class="div2">
+<h3><a name="id91816" id="id91816"/>C.5 Conversion to OpenMath</h3></div><div class="div2">
+<h3><a name="id91822" id="id91822"/>C.6 Conversion from OpenMath</h3></div><div class="div2">
+<h3><a name="id91829" id="id91829"/>C.7 Conversion to Strict Content MathML</h3></div><div class="div2">
+<h3><a name="id91837" id="id91837"/>C.8 Conversion from Strict Content MathML</h3></div><div class="div2">
+<h3><a name="id91844" id="id91844"/>C.9 YAML</h3><div class="div3">
+<h4><a name="id91849" id="id91849"/>C.9.1 Converting DSON to YAML</h4><div class="exampleInner"><pre>
+@{metadata} a
+	  </pre></div>
+	  becomes
+	  <div class="exampleInner"><pre>
+!ds!attrib [{metadata}, a]
+	  </pre></div></div><div class="div3">
+<h4><a name="id91869" id="id91869"/>C.9.2 Converting YAML to DSON</h4><div class="exampleInner"><pre>
+!ds!attrib [{metadata}, a]
+	  </pre></div>
+	  becomes
+	  <div class="exampleInner"><pre>
+@{metadata} a
+	  </pre></div></div></div></div><div class="div1">
+<h2><a name="id91891" id="id91891"/>D IDL for DSON</h2><p>
+	IDL
+      </p><div class="exampleInner"><pre>
+module dson {
+	typedef map&lt;DroSymbol, DSO&gt; DroDict;
+	typedef sequence&lt;DroKeyed&gt; DroPairs;
+	typedef sequence&lt;DSO&gt; DroSeq;
+	typedef sequence&lt;byte&gt; DroBinary;
+	typedef string DroString;
+	typedef string DroNumber;
+
+	interface DroSymbol {
+		attribute string iri;
+		attribute string name;
+	}
+
+	interface DroKeyed {
+		attribute DSO key;
+		attribute DSO value;
+	}
+
+	interface DSO {
+		DroSymbol tag;
+		DroDict meta;
+		DroKind kind;
+		any value;
+	}
+
+	enum DroKind {
+		DSO_NUMBER, // tag = 'Number'
+		DSO_BINARY, // tag = 'Binary'
+		DSO_STRING, // tag = 'String'
+		DSO_SYMBOL, // tag = 'Symbol'
+		DSO_DICT, 
+		DSO_SEQ, 
+		DSO_USE, // value is of type DroSymbol, ref to id= attr.
+	}
+}
+      </pre></div></div></div></body></html>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE spec PUBLIC "-//W3C//DTD Specification V2.2//EN"
+       "xmlspec.dtd" [
+<!--for doing work locally without a network connection -->
+]>
+
+<spec w3c-doctype="ds">
+  <header>
+    <title>Regular Expressions</title>
+    <version>1.0</version>
+    <w3c-designation>DS-regex</w3c-designation>
+    <w3c-doctype>Drosera Specification</w3c-doctype>
+    <pubdate>
+      <day>20</day>
+      <month>Dec</month>
+      <year>2009</year></pubdate>
+    <publoc>
+    </publoc>
+    <prevlocs>
+    </prevlocs>
+    <latestloc>
+    </latestloc>
+    <authlist>
+      <author>
+	<name>Andrew Robbins</name>
+	<email>and_j_rob@yahoo.com</email>
+      </author>
+    </authlist>
+    <abstract>
+      <p>
+      </p>
+    </abstract>
+    <status id="Status">
+      <p>
+      </p>
+    </status>
+    <langusage>
+      <language id="en-US">English</language>
+    </langusage>
+    <revisiondesc>
+      <p>Last Modified: $Date: 2008/09/16 11:51:04 $</p>
+  </revisiondesc>
+  </header>
+  <body>
+    <div1 id="introduction">
+      <head>Introduction</head>
+      <p>The Efficient XML Interchange (EXI) format is a very compact, high
+	performance XML representation that was designed to work well for a
+	broad range of applications.  It simultaneously improves performance
+	and significantly reduces bandwidth requirements without compromising
+	efficient use of other resources such as battery life, code size,
+	processing power, and memory.
+      </p>
+    </div1>
+  </body>
+</spec>

@@ -1,0 +1,633 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE spec PUBLIC "-//W3C//DTD Specification V2.2//EN"
+       "xmlspec.dtd" [
+<!--for doing work locally without a network connection -->
+]>
+
+<spec w3c-doctype="ds">
+  <header>
+    <title>Drosera Object XML (DROX)</title>
+    <version>0.5</version>
+    <w3c-designation>DS-dro</w3c-designation>
+    <w3c-doctype>Drosera Specification</w3c-doctype>
+    <pubdate>
+      <day>01</day>
+      <month>Aug</month>
+      <year>2011</year>
+    </pubdate>
+    <prevlocs>
+    </prevlocs>
+    <latestloc>
+      <loc href="drox.html">drox.html</loc>
+    </latestloc>
+    <publoc>
+      <loc href="drox.html">drox.html</loc>
+    </publoc>
+    <authlist>
+      <author>
+	    <name>Andrew Robbins</name>
+	    <email>and_j_rob@yahoo.com</email>
+      </author>
+    </authlist>
+    <abstract>
+      <p>
+	    This specifies the definition of Drosera Object XML (DROX). 
+        This is the normative syntax of the Drosera Object Model (DRO).
+      </p>
+    </abstract>
+    <status id="Status">
+      <p>
+	    This specification is in draft status. When it becomes finalized, 
+	    it will change to 0.9a, 0.9b, then when most of the defects have 
+	    been worked out, it will become version 1.0.
+      </p>
+    </status>
+    <langusage>
+      <language id="en-US">English</language>
+    </langusage>
+    <revisiondesc>
+      <p>Last Modified: $Date: 2010/01/16 11:51:04 $</p>
+    </revisiondesc>
+  </header>
+  <body>
+    <div1 id="frontmatter">
+      <head>Front Matter</head>
+      <p>
+      </p>
+      <div2 id="scope">
+	    <head>Scope</head>
+	    <p>
+	      The scope of this document is about DROX documents,
+	      and the interface between DROX documents and DROX processors.
+	      The primary scope is the definition of a <term>well-formed</term>
+	      <termref def="dsondocs">DROX document</termref>.
+	      Validation and interpretation are outside the
+	      scope of this specification.
+	    </p>
+      </div2>
+      <div2 id="conformance">
+	    <head>Conformance</head>
+	    <p>
+	      Few restrictions are placed on DRON processors.
+	      Most of the conformance criteria are for DRON documents
+	      themselves. 
+	    </p>
+	    <div3>
+	      <head>Documents</head>
+	      <p>
+	      </p>
+	    </div3>
+	    <div3>
+	      <head>Processors</head>
+	      <p>
+	      </p>
+	    </div3>
+      </div2>
+    </div1>
+    <div1 id="introduction">
+      <head>Introduction</head>
+      <p>
+	    This specification defines the concrete Drosera Object XML (DROX)
+        with respect to the abstract Drosera Object Model (DRO).
+      </p>
+      <p>
+      </p>
+
+      <div2>
+	    <head>Formal DRO Definition</head>
+	    <p>
+	      This section is <term>normative</term>.
+	    </p>
+	    <glist>
+	      <gitem>
+	        <label><termdef id="dso_value">DRO value</termdef></label>
+	        <def>
+	          A <term>DRO value</term> is a sequence of Unicode code points.
+	          <p>
+		        Values may be restricted further by tags, types, and metadata.
+		        Equality and comparison are undefined.
+	          </p>
+	        </def>
+	      </gitem>
+	      <gitem>
+	        <label><termdef id="dso_symbol">DRO symbol</termdef></label>
+	        <def>
+	          A <term>DRO symbol</term> is a
+	          <termref def="dso_value">value</termref> (<emph>name</emph>), a pair of 
+	          <termref def="dso_value">values</termref>
+	          (<emph>location</emph>, <emph>name</emph>) or a 
+	          <termref def="dso_node">node</termref> of the form:
+	          <p>&nbsp;&nbsp;&nbsp;&nbsp;
+	            (<code>'Symbol'</code>, {<code>base:</code> <emph>location</emph>,
+	            <code>name:</code> <emph>name</emph>}, []).
+	          </p>
+	          <p>
+		        In value form (called a <term>basic symbol</term>), 
+		        the location field is implicitly empty.
+		        In pair form (called a <term>standard symbol</term>), 
+		        an empty location or name is represented by an empty value.
+		        In node form (called an <term>extended symbol</term>), 
+		        an empty location or name is represented by a metadata
+		        dictionary without the corresponding key. The form may also be used
+		        to add extended attributes to a symbol, such as prefix, 
+		        scoping, or package information. In all forms,
+		        if <emph>location</emph> and <emph>name</emph> are both empty, 
+		        it denotes <code>null</code>.
+		        Equality and comparison of symbols 
+		        depends only on the two primary fields: <code>base</code> and <code>name</code>.
+		        All other keys in the metadata dictionary are irrelevant with regards to equality. 
+	          </p>
+	        </def>	    
+	      </gitem>
+	      <gitem>
+	        <label><termdef id="dso_maplet">DRO maplet</termdef></label>
+	        <def>
+	          A <term>DRO maplet</term> is a pair
+	          (<emph>key</emph>, <emph>object</emph>) where
+	          <emph>key</emph> is a <termref def="dso_symbol">symbol</termref>, and
+	          <emph>object</emph> is a <termref def="dso_node">node</termref>.
+	          <p>
+		        There are several kinds of maplets, 
+		        which are classified by their domains.
+		        A <term>maplet from <emph>X</emph> to <emph>Y</emph></term>
+		        is a maplet where <emph>keys</emph> are Xs
+		        and <emph>objects</emph> are Ys.
+		        <!--
+		            A <term>basic maplet</term> is one where 
+		            <emph>keys</emph> are <termref def="dso_symbol">symbols</termref>, and
+		            <emph>objects</emph> are <termref def="dso_value">values</termref>.
+		            A <term>standard maplet</term> is one where 
+		            <emph>keys</emph> are <termref def="dso_symbol">symbols</termref>, and
+		            <emph>objects</emph> are <termref def="dso_node">nodes</termref>.
+		            An <term>extended maplet</term> is one where 
+		            <emph>keys</emph> are 
+		            <termref def="dso_symbol">symbol</termref> 
+		            <termref def="dso_node">nodes</termref>.
+		            -->
+	          </p>
+	        </def>
+	      </gitem>
+	      <gitem>
+	        <label><termdef id="dso_node">DRO node</termdef></label>
+	        <def>
+	          A <term>DRO node</term> is a triple
+	          (<emph>type</emph>,
+	          <emph>metadata</emph>,
+	          <emph>content</emph>),
+	          where <emph>type</emph> is a <termref def="dso_symbol">symbol</termref>,
+	          <emph>metadata</emph> is a <termref def="dict">dictionary</termref>, and
+	          <emph>content</emph> is a <termref def="seq">sequence</termref>
+	          of (<termref def="dso_value">values</termref>,
+	          <termref def="dso_symbol">symbols</termref>,
+	          <termref def="dso_node">nodes</termref>, or
+	          <termref def="dso_maplet">maplets</termref>).
+	          <p>
+		        Many specialized types of nodes exist:
+	          </p>
+	          <ul>
+		        <li>
+		          A <term>value node</term> is a node whose content is a
+		          sequence of length one (whose only member is a 
+		          <termref def="dso_value">value</termref>).</li>
+		        <li>
+		          A <term>symbol node</term> is one whose content is
+		          sequence of length one (whose only member is a 
+		          <termref def="dso_symbol">symbol</termref>).</li>		  
+		        <li>
+		          An <term>(X,Y)-dictionary node</term> is one whose content is a
+		          bag of <termref def="dso_maplet">maplets</termref>
+		          from <emph>X</emph> to <emph>Y</emph>.
+		        </li>
+		        <li>
+		          An <term>(X)-sequence node</term> is one whose content is a
+		          sequence of <emph>X</emph>s.
+		        </li>
+	          </ul>
+	          <p>
+	          </p>
+	        </def>
+	      </gitem>
+	    </glist>
+	    <!--p>
+	        A DRO object is a triple of the form: 
+	        (<em>type</em> : <term>Symbol</term>, 
+	        <em>metadata</em> : <term>Pairs</term>, 
+	        <em>value</em>).
+	        A DRO symbol is a triple of the form:
+	        (<em>metadata</em> : <term>Pairs</term>, 
+	        <em>location</em> : <term>String</term>,
+	        <em>name</em> : <term>String</term>).
+	        A DRO value may be one of the following types:
+	        <ul>
+	          <li><code>Real</code> - a real number probably represented in JSON number syntax</li>
+	          <li><code>Binary</code> - a sequence of bytes (0-0xFF)</li>
+	          <li><code>String</code> - a sequence of characters (0-0x10FFFF)</li>
+	          <li><code>Symbol</code> - a DRO symbol</li>
+	          <li><code>Seq</code> - a sequence</li>
+	          <li><code>Bag</code> - a sequence (unordered), also known as a multi-set</li>
+	          <li><code>Pair</code> - a pair representing a key and a value</li>
+	          <li><code>Link</code> - a link referencing another object</li>
+	        </ul>
+	    </p-->
+      </div2>
+    </div1>
+    <div1 id="concrete-syntax">
+      <head>Concrete Syntax</head>
+      <p>
+	    The DRO model has five concrete syntaxes: 
+	    JSON, YAML, DRON (text), DROS (S-expr), and DROX (XML).
+      </p>
+      <div2>
+	    <head>DROX Syntax</head>
+	    <p>
+	      The DROS syntax is intended for use with Common Lisp and Scheme, where
+	      the primary form of data representation is S-expressions.
+	    </p>
+	    <div3>
+	      <head>Values</head>
+	      <p>
+	        Many values, such as numbers and strings, can be represented as they are in JSON,
+	        where strings are enclosed in quotes (""), and numbers are not enclosed at all.
+	        Binary strings may be enclosed in <code>#vu8()</code> syntax.
+	      </p>
+	      <ednote>
+	        <name>AJR</name>
+	        <date>2010-03-29</date>
+	        <edtext>TODO: research differences in JSON and Scheme number syntax.</edtext>
+	      </ednote>
+	    </div3>
+	    <div3>
+	      <head>Maplets</head>
+	      <p>
+	        A maplet is written as follows:
+	      </p>
+	      <eg>(<emph>key</emph> . <emph>object</emph>)</eg>
+	    </div3>
+	    <div3>
+	      <head>Dictionaries</head>
+	      <p>
+	        A dictionary is written as a sequence of maplets.
+	      </p>
+	      <eg>((<emph>key1</emph> . <emph>obj1</emph>) (<emph>key2</emph> . <emph>obj2</emph>))</eg>
+	    </div3>
+	    <div3>
+	      <head>Sequences</head>
+	      <p>
+	        A sequence is written as follows:
+	      </p>
+	      <eg>(<emph>a</emph> <emph>b</emph> <emph>c</emph> ...)</eg>
+	    </div3>
+	    <div3>
+	      <head>Nodes</head>
+	      <p>
+	        A DRO node is written in Scheme's vector notation:
+	      </p>
+	      <eg>#(<emph>type</emph> (<emph>metadata</emph>) <emph>content</emph>)</eg>
+	      <p>
+	        A node such as the above is <emph>not of type</emph> <code>rnrs:Vector</code>
+	        if and only if the first member is not a <code>Dict</code> and
+	        the second member is a <code>Dict</code> (or <code>()</code>).
+	      </p>
+	    </div3>
+	    <p>
+	      Becuase <code>()</code> could be interpreted as <code>null</code>, 
+	      the empty <code>Seq</code>, or the empty <code>Dict</code>, DROS documents
+	      may use the expressions <code>#(Seq ())</code> and <code>#(Dict ())</code> to distinguish these.
+	    </p>
+      </div2>
+      <div2>
+	    <head>DROX Syntax</head>
+	    <p>
+	      The DROX syntax is a mixture of two namespaces, which will be used frequently
+	      in this sections, so they are listed below for reference:
+	    </p>
+	    <eg>namespaces:
+          m:  "http://www.w3.org/1998/Math/MathML"
+          ds: "http://www.droscript.org/2010/DRON"</eg>
+	    <p>
+	      We will go through one by one to see how things are represented in this syntax.
+	    </p>
+	    <div3>
+	      <head>Numbers</head>
+	      <p>
+	        <code>Number</code>s are represented with <code>m:cn</code> and <code>ds:type</code>.
+	      </p>
+	    </div3>
+	    <div3>
+	      <head>Strings</head>
+	      <p>
+	        <code>String</code> strings are represented with <code>m:cs</code> and
+	        <code>Binary</code> strings are represented with <code>m:cbytes</code>.
+	      </p>
+	    </div3>
+	    <div3>
+	      <head>Symbols</head>
+	      <p>
+	        Symbols are represented with QNames or with <code>m:csymbol</code>.
+	      </p>
+	    </div3>
+	    <div3>
+	      <head>Maplets</head>
+	      <p>
+	        There are many instances in XML dialects of maplets, but some of them are not delimited
+	        very well, such as the <code>h:dl</code>, <code>h:dt</code>, <code>h:dd</code> elements
+	        from HTML, which are alternated instead of enclosed. XHTML2 does this a little better,
+	        where it proposes to use a new element <code>xh:di</code> to enclose 
+	        <code>h:dt</code> and <code>h:dd</code> elements, but since this does not conform to
+	        HTML4, it has not been very well accepted. MathML has the <code>m:list</code> element, 
+	        but this does not really denote a pair in the way that is desired. Therefore, a new
+	        element is used for representing <termref def="dso_maplet">maplets</termref>.
+	      </p>
+	      <eg>&lt;ds:maplet&gt;
+            &lt;m:csymbol&gt;<emph>key</emph>&lt;m:csymbol&gt;
+            <emph>object</emph>
+            &lt;ds:maplet&gt;</eg>
+	      <p>
+	        Since symbols are a common (if not sole) use of maplets, a short form is also allowed:
+	      </p>
+	      <eg>&lt;ds:maplet key="<emph>key</emph>"&gt;
+            <emph>object</emph>
+            &lt;ds:maplet&gt;</eg>
+	    </div3>
+	    <div3>
+	      <head>Sequences</head>
+	      <p>
+	        Sequences are represented with a combination of <code>m:list</code> and <code>ds:type</code>.
+	      </p>
+	      <table border="1">
+	        <thead>
+	          <th>DROX</th>
+	          <th>DRON</th>
+	        </thead>
+	        <tbody>
+	          <tr>
+		        <td>
+		          <eg>&lt;m:list ds:type="Seq"&gt;
+                    &lt;m:cn&gt;1&lt;/m:cn&gt;
+                    &lt;m:cn&gt;2&lt;/m:cn&gt;
+                    &lt;m:cn&gt;3&lt;/m:cn&gt;
+                    &lt;/m:list&gt;</eg>
+		        </td>
+		        <td>
+		          <eg>[1, 2, 3]</eg>
+		        </td>
+	          </tr>
+	          <tr>
+		        <td>
+		          <eg>&lt;m:set ds:type="Bag"&gt;
+                    &lt;m:cn&gt;1&lt;/m:cn&gt;
+                    &lt;m:cn&gt;2&lt;/m:cn&gt;
+                    &lt;m:cn&gt;3&lt;/m:cn&gt;
+                    &lt;/m:set&gt;</eg>
+		        </td>
+		        <td>
+		          <eg>{1, 2, 3}</eg>
+		        </td>
+	          </tr>
+	        </tbody>
+	      </table>
+	    </div3>
+	    <div3>
+	      <head>Dictionaries</head>
+	      <p>
+	        Dictionaries are represented with a combination of <code>m:set</code> and <code>ds:maplet</code>.
+	      </p>
+	      <table border="1">
+	        <thead>
+	          <th>DROX</th>
+	          <th>DRON</th>
+	        </thead>
+	        <tbody>
+	          <tr>
+		        <td>
+		          <eg>&lt;m:set ds:type="Dict"&gt;
+                    &lt;ds:maplet&gt;
+                    &lt;m:csymbol&gt;<term>name</term>&lt;/m:csymbol&gt;
+                    &lt;m:cs&gt;<term>John Doe</term>&lt;/m:cs&gt;
+                    &lt;ds:maplet&gt;
+                    &lt;ds:maplet&gt;
+                    &lt;m:csymbol&gt;<term>telephone</term>&lt;/m:csymbol&gt;
+                    &lt;m:cs&gt;<term>555-5555</term>&lt;/m:cs&gt;
+                    &lt;ds:maplet&gt;
+                    &lt;/m:set&gt;</eg>
+		        </td>
+		        <td>
+		          <eg>{name: "John Doe", telephone: "555-5555"}</eg>
+		        </td>
+	          </tr>
+	        </tbody>
+	      </table>
+	    </div3>
+      </div2>
+    </div1>
+  </body>
+  <back>
+    <div1>
+      <head>Glossary</head>
+      <glist>
+	    <gitem>
+	      <label><termdef id="dsondocs">DRON document</termdef></label>
+	      <def>
+	        A text document encoded in UTF-8 or UTF-16, which matches the productions
+	        given in section (??). The top-level production can be any value, but will
+	        probably be a <code>Seq</code> or a <code>Dict</code>.
+	      </def>
+	    </gitem>
+	    <gitem>
+	      <label><termdef id="dsonproc">DRON processor</termdef></label>
+	      <def>
+	        A program which reads or writes DRON documents, in one of the following
+	        syntax forms: JSON, YAML, DRON, or DROX. This effectively makes all
+	        JSON and YAML processors conforming DRON processors as well.
+	      </def>
+	    </gitem>
+	    <gitem>
+	      <label><termdef id="classtype">class type</termdef></label>
+	      <def>
+	        A <term>class type</term> is a <termref def="lens">lens</termref> 
+	        from <termref def="predicate">predicates</termref> to the type system.
+	        Every <termref def="predicate">predicate</termref> can be used to define a type. 
+	        Every type has an associated <termref def="memberpred">member predicate</termref> 
+	        that can be used to test to see if
+	        an object is a member of that type. Additionally, <term>class type</term>s
+	        can define a <termref def="subclasspred">subclass predicate</termref> 
+	        to test whether another type is a subclass.
+	      </def>
+	    </gitem>
+	    <gitem>
+	      <label><termdef id="memberpred">member predicate</termdef></label>
+	      <def>
+	        A <termref def="predicate">predicate</termref> used to determine membership.
+	      </def>
+	    </gitem>
+	    <gitem>
+	      <label><termdef id="subclasspred">subclass predicate</termdef></label>
+	      <def>
+	        A <termref def="predicate">predicate</termref> used to determine subclasses.
+	      </def>
+	    </gitem>
+	    <gitem>
+	      <label><termdef id="predicate">predicate</termdef></label>
+	      <def>
+	        A <term>predicate</term> is a function that returns a <code>Bool</code>.
+	      </def>
+	    </gitem>
+	    <gitem>
+	      <label><termdef id="property">property</termdef></label>
+	      <def>
+	        A <term>property</term> is a relation between pairs of nodes.
+	        confusing function/relation/predicate stuff!!!
+	      </def>
+	    </gitem>
+	    <gitem>
+	      <label><termdef id="formattype">format type</termdef></label>
+	      <def>
+	        A <term>format type</term> is a <termref def="lens">lens</termref>
+	        from <code>Integer</code>, <code>Binary</code>, or <code>String</code> to a <term>model type</term>.
+	        There are a few built-in examples of format types:
+	        <ulist>
+	          <item><code>Binary.hex</code></item>
+	          A <termref def="parser">parser</termref> for the <code>Binary</code> type.
+	        </ulist>
+	      </def>
+	    </gitem>
+	    <gitem>
+	      <label><termdef id="modeltype">model type</termdef></label>
+	      <def>
+	        A <term>model type</term> is a <termref def="lens">lens</termref>
+	        from <code>Dict</code> to the type system.
+	        In general, these are known as algebraic datatypes.
+
+	        The <termref def="memberpred">member predicate</termref> of all model types
+	        is whether or not it was constructed with this particular model's constructors,
+	        and the arity and types match.
+
+	        Each constructor can be considered as a subclass of the model type it constructs.
+	        The <termref def="subclasspred">subclass predicate</termref> of all model types
+	        is limited to those subclasses automatically created by its constructors.
+	        The constructor subclasses are written as 
+	        <code>ConstructedBy(hex)</code> in Droscript.
+	      </def>
+	    </gitem>
+	    <gitem>
+	      <label><termdef id="modelcon">model constructor</termdef></label>
+	      <def>
+	        A <term>model constructor</term> is constructed by a <termref def="lens">lens</termref>
+	        from <code>Seq</code> to <code>Dict</code>, more traditionally known
+	        as product types, record types, or struct types. Basically, 
+	        it gives names to elements of the <code>Seq</code>.
+	        Note: the names given may be (_1, _2, _3, ...) which is the identity transform if
+	        sequences are represented as RDF triples. 
+	        See The RDF Syntax Specification for more information.
+	      </def>
+	    </gitem>
+	    <gitem>
+	      <label><termdef id="type">type</termdef></label>
+	      <def>
+	        A type is an instance of exactly one of the following: Class, Format, or Model.
+	      </def>
+	    </gitem>
+	    <gitem>
+	      <label><termdef id="lens">lens</termdef></label>
+	      <def>
+	        A <term>lens</term> is a one-to-one and onto (bijective) function. When we use this term,
+	        we use it loosely. For formal usage, we refer to the <code>Lens(a)b</code> function type.
+	        This term is borrowed from the Boomerang programming language.
+	      </def>
+	    </gitem>
+	    <gitem>
+	      <label>Module</label>
+	      <def>
+	      </def>
+	    </gitem>
+      </glist>
+    </div1>
+    <div1>
+      <head>Conversions</head>
+      <div2>
+	    <head>Conversion to XML Infoset</head>
+	    <p>
+	      The basic conversion to XML Infoset is to first convert to DROX.
+	      Additional processing involves handling edge cases, and nodes of the following types:
+	    </p>
+	    <ul>
+	      <li><code>Comment</code> nodes are converted to <code>&lt;!-- value --&gt;</code> syntax.</li>
+	      <li><code>Document</code> nodes are converted to the corresponding syntax</li>
+	      <li><code>Namespace</code> nodes are converted to the corresponding syntax</li>
+	      <li><code>ProcessingInstruction</code>
+	        nodes are converted to <code>&lt;?name value?&gt;</code> syntax.</li>
+	    </ul>
+      </div2>
+      <div2>
+	    <head>Conversion from XML Infoset</head>
+	    <p>
+	      Several XML infoset nodes are ignored. All CDATASection, DocumentFragment, 
+	      DocumentType, Entity, EntityReference, and Notation nodes are ignored.
+	      All others are converted into general nodes with the type field set to the corresponding type.
+	    </p>
+      </div2>
+      <div2>
+	    <head>Conversion to RDF Triples</head>
+	    <p>
+	      All symbols must be encoded in URI form. Symbols without
+	      the <code>base</code> field set (like "#Name") should be encoded as
+	      <code>urn:drosera:Name</code>.
+	    </p>
+      </div2>
+      <div2>
+	    <head>Conversion from RDF Triples</head>
+	    <p>
+	      All symbols must be derived from URI-encoded symbols. This includes
+	      translating <code>urn:drosera:Name</code> to "#Name".
+	    </p>
+      </div2>
+      <div2>
+	    <head>Conversion to OpenMath</head>
+      </div2>
+      <div2>
+	    <head>Conversion from OpenMath</head>
+      </div2>
+      <div2>
+	    <head>Conversion to Strict Content MathML</head>
+      </div2>
+      <div2>
+	    <head>Conversion from Strict Content MathML</head>
+      </div2>
+      <div2>
+	    <head>YAML</head>
+	    <div3>
+	      <head>Converting DRON to YAML</head>
+	      <eg>
+            @{metadata} a
+	      </eg>
+	      becomes
+	      <eg>
+            !ds!attrib [{metadata}, a]
+	      </eg>
+	    </div3>
+	    <div3>
+	      <head>Converting YAML to DRON</head>
+	      <eg>
+            !ds!attrib [{metadata}, a]
+	      </eg>
+	      becomes
+	      <eg>
+            @{metadata} a
+	      </eg>
+	    </div3>
+      </div2>
+      <!--div2>
+	      <head>Conversion to LLVM Instructions</head>
+    </div2>
+    <div2>
+	  <head>Conversion from LLVM Instructions</head>
+    </div2>
+    <div2>
+	  <head>Conversion to GHC External Core</head>
+    </div2>
+    <div2>
+	  <head>Conversion from GHC External Core</head>
+      </div2-->
+    </div1>
+  </back>
+</spec>
