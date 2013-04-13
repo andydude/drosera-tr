@@ -1,383 +1,1272 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en-US"><head><title>Drosera Object XML (DROX) 0.5</title><style type="text/css">
-code           { font-family: monospace; }
-
-div.constraint,
-div.issue,
-div.note,
-div.notice     { margin-left: 2em; }
-
-ol.enumar      { list-style-type: decimal; }
-ol.enumla      { list-style-type: lower-alpha; }
-ol.enumlr      { list-style-type: lower-roman; }
-ol.enumua      { list-style-type: upper-alpha; }
-ol.enumur      { list-style-type: upper-roman; }
-
-
-div.exampleInner pre { margin-left: 1em;
-                       margin-top: 0em; margin-bottom: 0em}
-div.exampleOuter {border: 4px double gray;
-                  margin: 0em; padding: 0em}
-div.exampleInner { background-color: #d5dee3;
-                   border-top-width: 4px;
-                   border-top-style: double;
-                   border-top-color: #d3d3d3;
-                   border-bottom-width: 4px;
-                   border-bottom-style: double;
-                   border-bottom-color: #d3d3d3;
-                   padding: 4px; margin: 0em }
-div.exampleWrapper { margin: 4px }
-div.exampleHeader { font-weight: bold;
-                    margin: 4px}
-</style><link rel="stylesheet" type="text/css" href="DS.css"/></head><body><div class="head"><p><a href="http://www.w3.org/"><img src="head-DS.png" alt="Drosera"/></a></p>
-<h1><a name="title" id="title"/>Drosera Object XML (DROX) 0.5</h1>
-<h2><a name="w3c-doctype" id="w3c-doctype"/>Drosera Specification 01 Aug 2011</h2><dl><dt>This version:</dt><dd>
-      <a href="drox.html">drox.html</a>
-    </dd><dt>Latest version:</dt><dd>
-      <a href="drox.html">drox.html</a>
-    </dd><dt>Previous version:</dt><dd>
-    </dd><dt>Editor:</dt><dd>Andrew Robbins <a href="">&lt;and_j_rob@yahoo.com&gt;</a></dd></dl><p class="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2011 Drosera, Inc. All Rights Reserved.</p></div><hr/><div>
-<h2><a name="abstract" id="abstract"/>Abstract</h2><p>
-	    This specifies the definition of Drosera Object XML (DROX). 
-        This is the normative syntax of the Drosera Object Model (DRO).
-      </p></div><div>
-<h2><a name="status" id="status"/>Status of this Document</h2><p>
-	    This specification is in draft status. When it becomes finalized, 
-	    it will change to 0.9a, 0.9b, then when most of the defects have 
-	    been worked out, it will become version 1.0.
-      </p></div><div class="toc">
-<h2><a name="contents" id="contents"/>Table of Contents</h2><p class="toc">1 <a href="#frontmatter">Front Matter</a><br/>
-    1.1 <a href="#scope">Scope</a><br/>
-    1.2 <a href="#conformance">Conformance</a><br/>
-        1.2.1 <a href="#idp496992">Documents</a><br/>
-        1.2.2 <a href="#idp498144">Processors</a><br/>
-2 <a href="#introduction">Introduction</a><br/>
-    2.1 <a href="#idp501328">Formal DRO Definition</a><br/>
-3 <a href="#concrete-syntax">Concrete Syntax</a><br/>
-    3.1 <a href="#idp546512">DROX Syntax</a><br/>
-        3.1.1 <a href="#idp547712">Values</a><br/>
-        3.1.2 <a href="#idp551200">Maplets</a><br/>
-        3.1.3 <a href="#idp554032">Dictionaries</a><br/>
-        3.1.4 <a href="#idp557520">Sequences</a><br/>
-        3.1.5 <a href="#idp560592">Nodes</a><br/>
-    3.2 <a href="#idp569408">DROX Syntax</a><br/>
-        3.2.1 <a href="#idp571872">Numbers</a><br/>
-        3.2.2 <a href="#idp574272">Strings</a><br/>
-        3.2.3 <a href="#idp577136">Symbols</a><br/>
-        3.2.4 <a href="#idp578784">Maplets</a><br/>
-        3.2.5 <a href="#idp587792">Sequences</a><br/>
-        3.2.6 <a href="#idp600192">Dictionaries</a><br/>
-</p>
-<h3><a name="appendices" id="appendices"/>Appendices</h3><p class="toc">A <a href="#idp611760">Glossary</a><br/>
-B <a href="#idp656112">Conversions</a><br/>
-    B.1 <a href="#idp656768">Conversion to XML Infoset</a><br/>
-    B.2 <a href="#idp662224">Conversion from XML Infoset</a><br/>
-    B.3 <a href="#idp663680">Conversion to RDF Triples</a><br/>
-    B.4 <a href="#idp665840">Conversion from RDF Triples</a><br/>
-    B.5 <a href="#idp667568">Conversion to OpenMath</a><br/>
-    B.6 <a href="#idp668368">Conversion from OpenMath</a><br/>
-    B.7 <a href="#idp669168">Conversion to Strict Content MathML</a><br/>
-    B.8 <a href="#idp669984">Conversion from Strict Content MathML</a><br/>
-    B.9 <a href="#idp670800">YAML</a><br/>
-        B.9.1 <a href="#idp671456">Converting DRON to YAML</a><br/>
-        B.9.2 <a href="#idp673664">Converting YAML to DRON</a><br/>
-</p></div><hr/><div class="body"><div class="div1">
-<h2><a name="frontmatter" id="frontmatter"/>1 Front Matter</h2><p>
-      </p><div class="div2">
-<h3><a name="scope" id="scope"/>1.1 Scope</h3><p>
-	      The scope of this document is about DROX documents,
-	      and the interface between DROX documents and DROX processors.
-	      The primary scope is the definition of a <b>well-formed</b>
-	      <a title="" href="#dsondocs">DROX document</a>.
-	      Validation and interpretation are outside the
-	      scope of this specification.
-	    </p></div><div class="div2">
-<h3><a name="conformance" id="conformance"/>1.2 Conformance</h3><p>
-	      Few restrictions are placed on DRON processors.
-	      Most of the conformance criteria are for DRON documents
-	      themselves. 
-	    </p><div class="div3">
-<h4><a name="idp496992" id="idp496992"/>1.2.1 Documents</h4><p>
-	      </p></div><div class="div3">
-<h4><a name="idp498144" id="idp498144"/>1.2.2 Processors</h4><p>
-	      </p></div></div></div><div class="div1">
-<h2><a name="introduction" id="introduction"/>2 Introduction</h2><p>
-	    This specification defines the concrete Drosera Object XML (DROX)
-        with respect to the abstract Drosera Object Model (DRO).
-      </p><p>
-      </p><div class="div2">
-<h3><a name="idp501328" id="idp501328"/>2.1 Formal DRO Definition</h3><p>
-	      This section is <b>normative</b>.
-	    </p><dl><dt class="label">[<a name="dso_value" id="dso_value" title="">Definition</a>: DRO value]</dt><dd>
-	          A <b>DRO value</b> is a sequence of Unicode code points.
-	          <p>
-		        Values may be restricted further by tags, types, and metadata.
-		        Equality and comparison are undefined.
-	          </p></dd><dt class="label">[<a name="dso_symbol" id="dso_symbol" title="">Definition</a>: DRO symbol]</dt><dd>
-	          A <b>DRO symbol</b> is a
-	          <a title="" href="#dso_value">value</a> (<em>name</em>), a pair of 
-	          <a title="" href="#dso_value">values</a>
-	          (<em>location</em>, <em>name</em>) or a 
-	          <a title="" href="#dso_node">node</a> of the form:
-	          <p>    
-	            (<code>'Symbol'</code>, {<code>base:</code> <em>location</em>,
-	            <code>name:</code> <em>name</em>}, []).
-	          </p><p>
-		        In value form (called a <b>basic symbol</b>), 
-		        the location field is implicitly empty.
-		        In pair form (called a <b>standard symbol</b>), 
-		        an empty location or name is represented by an empty value.
-		        In node form (called an <b>extended symbol</b>), 
-		        an empty location or name is represented by a metadata
-		        dictionary without the corresponding key. The form may also be used
-		        to add extended attributes to a symbol, such as prefix, 
-		        scoping, or package information. In all forms,
-		        if <em>location</em> and <em>name</em> are both empty, 
-		        it denotes <code>null</code>.
-		        Equality and comparison of symbols 
-		        depends only on the two primary fields: <code>base</code> and <code>name</code>.
-		        All other keys in the metadata dictionary are irrelevant with regards to equality. 
-	          </p></dd><dt class="label">[<a name="dso_maplet" id="dso_maplet" title="">Definition</a>: DRO maplet]</dt><dd>
-	          A <b>DRO maplet</b> is a pair
-	          (<em>key</em>, <em>object</em>) where
-	          <em>key</em> is a <a title="" href="#dso_symbol">symbol</a>, and
-	          <em>object</em> is a <a title="" href="#dso_node">node</a>.
-	          <p>
-		        There are several kinds of maplets, 
-		        which are classified by their domains.
-		        A <b>maplet from <em>X</em> to <em>Y</em></b>
-		        is a maplet where <em>keys</em> are Xs
-		        and <em>objects</em> are Ys.
-		        
-	          </p></dd><dt class="label">[<a name="dso_node" id="dso_node" title="">Definition</a>: DRO node]</dt><dd>
-	          A <b>DRO node</b> is a triple
-	          (<em>type</em>,
-	          <em>metadata</em>,
-	          <em>content</em>),
-	          where <em>type</em> is a <a title="" href="#dso_symbol">symbol</a>,
-	          <em>metadata</em> is a <a title="" href="#">dictionary</a>, and
-	          <em>content</em> is a <a title="" href="#">sequence</a>
-	          of (<a title="" href="#dso_value">values</a>,
-	          <a title="" href="#dso_symbol">symbols</a>,
-	          <a title="" href="#dso_node">nodes</a>, or
-	          <a title="" href="#dso_maplet">maplets</a>).
-	          <p>
-		        Many specialized types of nodes exist:
-	          </p><ul><li>
-		          A <b>value node</b> is a node whose content is a
-		          sequence of length one (whose only member is a 
-		          <a title="" href="#dso_value">value</a>).</li><li>
-		          A <b>symbol node</b> is one whose content is
-		          sequence of length one (whose only member is a 
-		          <a title="" href="#dso_symbol">symbol</a>).</li><li>
-		          An <b>(X,Y)-dictionary node</b> is one whose content is a
-		          bag of <a title="" href="#dso_maplet">maplets</a>
-		          from <em>X</em> to <em>Y</em>.
-		        </li><li>
-		          An <b>(X)-sequence node</b> is one whose content is a
-		          sequence of <em>X</em>s.
-		        </li></ul><p>
-	          </p></dd></dl></div></div><div class="div1">
-<h2><a name="concrete-syntax" id="concrete-syntax"/>3 Concrete Syntax</h2><p>
-	    The DRO model has five concrete syntaxes: 
-	    JSON, YAML, DRON (text), DROS (S-expr), and DROX (XML).
-      </p><div class="div2">
-<h3><a name="idp546512" id="idp546512"/>3.1 DROX Syntax</h3><p>
-	      The DROS syntax is intended for use with Common Lisp and Scheme, where
-	      the primary form of data representation is S-expressions.
-	    </p><div class="div3">
-<h4><a name="idp547712" id="idp547712"/>3.1.1 Values</h4><p>
-	        Many values, such as numbers and strings, can be represented as they are in JSON,
-	        where strings are enclosed in quotes (""), and numbers are not enclosed at all.
-	        Binary strings may be enclosed in <code>#vu8()</code> syntax.
-	      </p><table border="1" summary="Editorial note: AJR"><tr><td align="left" valign="top" width="50%"><b>Editorial note: AJR</b></td><td align="right" valign="top" width="50%">2010-03-29</td></tr><tr><td colspan="2" align="left" valign="top">TODO: research differences in JSON and Scheme number syntax.</td></tr></table></div><div class="div3">
-<h4><a name="idp551200" id="idp551200"/>3.1.2 Maplets</h4><p>
-	        A maplet is written as follows:
-	      </p><div class="exampleInner"><pre>(<em>key</em> . <em>object</em>)</pre></div></div><div class="div3">
-<h4><a name="idp554032" id="idp554032"/>3.1.3 Dictionaries</h4><p>
-	        A dictionary is written as a sequence of maplets.
-	      </p><div class="exampleInner"><pre>((<em>key1</em> . <em>obj1</em>) (<em>key2</em> . <em>obj2</em>))</pre></div></div><div class="div3">
-<h4><a name="idp557520" id="idp557520"/>3.1.4 Sequences</h4><p>
-	        A sequence is written as follows:
-	      </p><div class="exampleInner"><pre>(<em>a</em> <em>b</em> <em>c</em> ...)</pre></div></div><div class="div3">
-<h4><a name="idp560592" id="idp560592"/>3.1.5 Nodes</h4><p>
-	        A DRO node is written in Scheme's vector notation:
-	      </p><div class="exampleInner"><pre>#(<em>type</em> (<em>metadata</em>) <em>content</em>)</pre></div><p>
-	        A node such as the above is <em>not of type</em> <code>rnrs:Vector</code>
-	        if and only if the first member is not a <code>Dict</code> and
-	        the second member is a <code>Dict</code> (or <code>()</code>).
-	      </p></div><p>
-	      Becuase <code>()</code> could be interpreted as <code>null</code>, 
-	      the empty <code>Seq</code>, or the empty <code>Dict</code>, DROS documents
-	      may use the expressions <code>#(Seq ())</code> and <code>#(Dict ())</code> to distinguish these.
-	    </p></div><div class="div2">
-<h3><a name="idp569408" id="idp569408"/>3.2 DROX Syntax</h3><p>
-	      The DROX syntax is a mixture of two namespaces, which will be used frequently
-	      in this sections, so they are listed below for reference:
-	    </p><div class="exampleInner"><pre>namespaces:
-          m:  "http://www.w3.org/1998/Math/MathML"
-          ds: "http://www.droscript.org/2010/DRON"</pre></div><p>
-	      We will go through one by one to see how things are represented in this syntax.
-	    </p><div class="div3">
-<h4><a name="idp571872" id="idp571872"/>3.2.1 Numbers</h4><p>
-	        <code>Number</code>s are represented with <code>m:cn</code> and <code>ds:type</code>.
-	      </p></div><div class="div3">
-<h4><a name="idp574272" id="idp574272"/>3.2.2 Strings</h4><p>
-	        <code>String</code> strings are represented with <code>m:cs</code> and
-	        <code>Binary</code> strings are represented with <code>m:cbytes</code>.
-	      </p></div><div class="div3">
-<h4><a name="idp577136" id="idp577136"/>3.2.3 Symbols</h4><p>
-	        Symbols are represented with QNames or with <code>m:csymbol</code>.
-	      </p></div><div class="div3">
-<h4><a name="idp578784" id="idp578784"/>3.2.4 Maplets</h4><p>
-	        There are many instances in XML dialects of maplets, but some of them are not delimited
-	        very well, such as the <code>h:dl</code>, <code>h:dt</code>, <code>h:dd</code> elements
-	        from HTML, which are alternated instead of enclosed. XHTML2 does this a little better,
-	        where it proposes to use a new element <code>xh:di</code> to enclose 
-	        <code>h:dt</code> and <code>h:dd</code> elements, but since this does not conform to
-	        HTML4, it has not been very well accepted. MathML has the <code>m:list</code> element, 
-	        but this does not really denote a pair in the way that is desired. Therefore, a new
-	        element is used for representing <a title="" href="#dso_maplet">maplets</a>.
-	      </p><div class="exampleInner"><pre>&lt;ds:maplet&gt;
-            &lt;m:csymbol&gt;<em>key</em>&lt;m:csymbol&gt;
-            <em>object</em>
-            &lt;ds:maplet&gt;</pre></div><p>
-	        Since symbols are a common (if not sole) use of maplets, a short form is also allowed:
-	      </p><div class="exampleInner"><pre>&lt;ds:maplet key="<em>key</em>"&gt;
-            <em>object</em>
-            &lt;ds:maplet&gt;</pre></div></div><div class="div3">
-<h4><a name="idp587792" id="idp587792"/>3.2.5 Sequences</h4><p>
-	        Sequences are represented with a combination of <code>m:list</code> and <code>ds:type</code>.
-	      </p><table border="1"><thead><th>DROX</th><th>DRON</th></thead><tbody><tr><td>
-		          <div class="exampleInner"><pre>&lt;m:list ds:type="Seq"&gt;
-                    &lt;m:cn&gt;1&lt;/m:cn&gt;
-                    &lt;m:cn&gt;2&lt;/m:cn&gt;
-                    &lt;m:cn&gt;3&lt;/m:cn&gt;
-                    &lt;/m:list&gt;</pre></div>
-		        </td><td>
-		          <div class="exampleInner"><pre>[1, 2, 3]</pre></div>
-		        </td></tr><tr><td>
-		          <div class="exampleInner"><pre>&lt;m:set ds:type="Bag"&gt;
-                    &lt;m:cn&gt;1&lt;/m:cn&gt;
-                    &lt;m:cn&gt;2&lt;/m:cn&gt;
-                    &lt;m:cn&gt;3&lt;/m:cn&gt;
-                    &lt;/m:set&gt;</pre></div>
-		        </td><td>
-		          <div class="exampleInner"><pre>{1, 2, 3}</pre></div>
-		        </td></tr></tbody></table></div><div class="div3">
-<h4><a name="idp600192" id="idp600192"/>3.2.6 Dictionaries</h4><p>
-	        Dictionaries are represented with a combination of <code>m:set</code> and <code>ds:maplet</code>.
-	      </p><table border="1"><thead><th>DROX</th><th>DRON</th></thead><tbody><tr><td>
-		          <div class="exampleInner"><pre>&lt;m:set ds:type="Dict"&gt;
-                    &lt;ds:maplet&gt;
-                    &lt;m:csymbol&gt;<b>name</b>&lt;/m:csymbol&gt;
-                    &lt;m:cs&gt;<b>John Doe</b>&lt;/m:cs&gt;
-                    &lt;ds:maplet&gt;
-                    &lt;ds:maplet&gt;
-                    &lt;m:csymbol&gt;<b>telephone</b>&lt;/m:csymbol&gt;
-                    &lt;m:cs&gt;<b>555-5555</b>&lt;/m:cs&gt;
-                    &lt;ds:maplet&gt;
-                    &lt;/m:set&gt;</pre></div>
-		        </td><td>
-		          <div class="exampleInner"><pre>{name: "John Doe", telephone: "555-5555"}</pre></div>
-		        </td></tr></tbody></table></div></div></div></div><div class="back"><div class="div1">
-<h2><a name="idp611760" id="idp611760"/>A Glossary</h2><dl><dt class="label">[<a name="dsondocs" id="dsondocs" title="">Definition</a>: DRON document]</dt><dd>
-	        A text document encoded in UTF-8 or UTF-16, which matches the productions
-	        given in section (??). The top-level production can be any value, but will
-	        probably be a <code>Seq</code> or a <code>Dict</code>.
-	      </dd><dt class="label">[<a name="dsonproc" id="dsonproc" title="">Definition</a>: DRON processor]</dt><dd>
-	        A program which reads or writes DRON documents, in one of the following
-	        syntax forms: JSON, YAML, DRON, or DROX. This effectively makes all
-	        JSON and YAML processors conforming DRON processors as well.
-	      </dd><dt class="label">[<a name="classtype" id="classtype" title="">Definition</a>: class type]</dt><dd>
-	        A <b>class type</b> is a <a title="" href="#lens">lens</a> 
-	        from <a title="" href="#predicate">predicates</a> to the type system.
-	        Every <a title="" href="#predicate">predicate</a> can be used to define a type. 
-	        Every type has an associated <a title="" href="#memberpred">member predicate</a> 
-	        that can be used to test to see if
-	        an object is a member of that type. Additionally, <b>class type</b>s
-	        can define a <a title="" href="#subclasspred">subclass predicate</a> 
-	        to test whether another type is a subclass.
-	      </dd><dt class="label">[<a name="memberpred" id="memberpred" title="">Definition</a>: member predicate]</dt><dd>
-	        A <a title="" href="#predicate">predicate</a> used to determine membership.
-	      </dd><dt class="label">[<a name="subclasspred" id="subclasspred" title="">Definition</a>: subclass predicate]</dt><dd>
-	        A <a title="" href="#predicate">predicate</a> used to determine subclasses.
-	      </dd><dt class="label">[<a name="predicate" id="predicate" title="">Definition</a>: predicate]</dt><dd>
-	        A <b>predicate</b> is a function that returns a <code>Bool</code>.
-	      </dd><dt class="label">[<a name="property" id="property" title="">Definition</a>: property]</dt><dd>
-	        A <b>property</b> is a relation between pairs of nodes.
-	        confusing function/relation/predicate stuff!!!
-	      </dd><dt class="label">[<a name="formattype" id="formattype" title="">Definition</a>: format type]</dt><dd>
-	        A <b>format type</b> is a <a title="" href="#lens">lens</a>
-	        from <code>Integer</code>, <code>Binary</code>, or <code>String</code> to a <b>model type</b>.
-	        There are a few built-in examples of format types:
-	        <ul><li><code>Binary.hex</code></li>
-	          A <a title="" href="#">parser</a> for the <code>Binary</code> type.
-	        </ul></dd><dt class="label">[<a name="modeltype" id="modeltype" title="">Definition</a>: model type]</dt><dd>
-	        A <b>model type</b> is a <a title="" href="#lens">lens</a>
-	        from <code>Dict</code> to the type system.
-	        In general, these are known as algebraic datatypes.
-
-	        The <a title="" href="#memberpred">member predicate</a> of all model types
-	        is whether or not it was constructed with this particular model's constructors,
-	        and the arity and types match.
-
-	        Each constructor can be considered as a subclass of the model type it constructs.
-	        The <a title="" href="#subclasspred">subclass predicate</a> of all model types
-	        is limited to those subclasses automatically created by its constructors.
-	        The constructor subclasses are written as 
-	        <code>ConstructedBy(hex)</code> in Droscript.
-	      </dd><dt class="label">[<a name="modelcon" id="modelcon" title="">Definition</a>: model constructor]</dt><dd>
-	        A <b>model constructor</b> is constructed by a <a title="" href="#lens">lens</a>
-	        from <code>Seq</code> to <code>Dict</code>, more traditionally known
-	        as product types, record types, or struct types. Basically, 
-	        it gives names to elements of the <code>Seq</code>.
-	        Note: the names given may be (_1, _2, _3, ...) which is the identity transform if
-	        sequences are represented as RDF triples. 
-	        See The RDF Syntax Specification for more information.
-	      </dd><dt class="label">[<a name="type" id="type" title="">Definition</a>: type]</dt><dd>
-	        A type is an instance of exactly one of the following: Class, Format, or Model.
-	      </dd><dt class="label">[<a name="lens" id="lens" title="">Definition</a>: lens]</dt><dd>
-	        A <b>lens</b> is a one-to-one and onto (bijective) function. When we use this term,
-	        we use it loosely. For formal usage, we refer to the <code>Lens(a)b</code> function type.
-	        This term is borrowed from the Boomerang programming language.
-	      </dd><dt class="label">Module</dt><dd/></dl></div><div class="div1">
-<h2><a name="idp656112" id="idp656112"/>B Conversions</h2><div class="div2">
-<h3><a name="idp656768" id="idp656768"/>B.1 Conversion to XML Infoset</h3><p>
-	      The basic conversion to XML Infoset is to first convert to DROX.
-	      Additional processing involves handling edge cases, and nodes of the following types:
-	    </p><ul><li><code>Comment</code> nodes are converted to <code>&lt;!-- value --&gt;</code> syntax.</li><li><code>Document</code> nodes are converted to the corresponding syntax</li><li><code>Namespace</code> nodes are converted to the corresponding syntax</li><li><code>ProcessingInstruction</code>
-	        nodes are converted to <code>&lt;?name value?&gt;</code> syntax.</li></ul></div><div class="div2">
-<h3><a name="idp662224" id="idp662224"/>B.2 Conversion from XML Infoset</h3><p>
-	      Several XML infoset nodes are ignored. All CDATASection, DocumentFragment, 
-	      DocumentType, Entity, EntityReference, and Notation nodes are ignored.
-	      All others are converted into general nodes with the type field set to the corresponding type.
-	    </p></div><div class="div2">
-<h3><a name="idp663680" id="idp663680"/>B.3 Conversion to RDF Triples</h3><p>
-	      All symbols must be encoded in URI form. Symbols without
-	      the <code>base</code> field set (like "#Name") should be encoded as
-	      <code>urn:drosera:Name</code>.
-	    </p></div><div class="div2">
-<h3><a name="idp665840" id="idp665840"/>B.4 Conversion from RDF Triples</h3><p>
-	      All symbols must be derived from URI-encoded symbols. This includes
-	      translating <code>urn:drosera:Name</code> to "#Name".
-	    </p></div><div class="div2">
-<h3><a name="idp667568" id="idp667568"/>B.5 Conversion to OpenMath</h3></div><div class="div2">
-<h3><a name="idp668368" id="idp668368"/>B.6 Conversion from OpenMath</h3></div><div class="div2">
-<h3><a name="idp669168" id="idp669168"/>B.7 Conversion to Strict Content MathML</h3></div><div class="div2">
-<h3><a name="idp669984" id="idp669984"/>B.8 Conversion from Strict Content MathML</h3></div><div class="div2">
-<h3><a name="idp670800" id="idp670800"/>B.9 YAML</h3><div class="div3">
-<h4><a name="idp671456" id="idp671456"/>B.9.1 Converting DRON to YAML</h4><div class="exampleInner"><pre>
-            @{metadata} a
-	      </pre></div>
-	      becomes
-	      <div class="exampleInner"><pre>
-            !ds!attrib [{metadata}, a]
-	      </pre></div></div><div class="div3">
-<h4><a name="idp673664" id="idp673664"/>B.9.2 Converting YAML to DRON</h4><div class="exampleInner"><pre>
-            !ds!attrib [{metadata}, a]
-	      </pre></div>
-	      becomes
-	      <div class="exampleInner"><pre>
-            @{metadata} a
-	      </pre></div></div></div></div></div></body></html>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Droscheme</title>
+    <link rel="stylesheet" href="css/scribble.css">
+    <link rel="stylesheet" href="css/drosera.css">
+    <link rel="stylesheet" href="css/gos-style.css">
+    <!--link rel="stylesheet" href="stylesheets/pygment_trac.css"-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="js/drosera.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <div class="drobar">
+      <ul>
+        <li><a href="/"><small>Drosera</small></a></li>
+      </ul>
+      <div class="right">
+        <ul>
+          <li><a href="http://github.com/andydude/droscheme"><small>GitHub</small></a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="wrapper">
+        <div class="tocset">
+            <div class="tocview">
+                <div class="tocviewlist" style="margin-bottom: 1em;">
+                    <div class="tocviewtitle">
+                        <table cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td style="width: 1em;">
+                                    <a href="javascript:void(0);" title="Expand/Collapse" class="tocviewtoggle" onclick="TocviewToggle(this,&quot;tocview_0&quot;);">►</a>
+                                </td>
+                                <td/>
+                                <td>
+                                    <a href="" class="tocviewselflink" pltdoc="x">DROX</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="tocviewsublistonly" style="display: none;" id="tocview_0">
+                        <table cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td align="right">1 </td>
+                                <td>
+                                    <a href="#(part._.Front_.Matter)" class="tocviewlink" pltdoc="x">Front Matter</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">2 </td>
+                                <td>
+                                    <a href="#(part._.Applications)" class="tocviewlink" pltdoc="x">Applications</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">3 </td>
+                                <td>
+                                    <a href="#(part._.Bindings)" class="tocviewlink" pltdoc="x">Bindings</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">4 </td>
+                                <td>
+                                    <a href="#(part._.Statements)" class="tocviewlink" pltdoc="x">Statements</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">5 </td>
+                                <td>
+                                    <a href="#(part._.Declarations)" class="tocviewlink" pltdoc="x">Declarations</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">6 </td>
+                                <td>
+                                    <a href="#(part._.Expressions)" class="tocviewlink" pltdoc="x">Expressions</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">7 </td>
+                                <td>
+                                    <a href="#(part._.Literals)" class="tocviewlink" pltdoc="x">Literals</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">8 </td>
+                                <td>
+                                    <a href="#(part._.Other_elements)" class="tocviewlink" pltdoc="x">Other elements</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tocsub">
+                <table class="tocsublist" cellspacing="0">
+                    <tr>
+                        <td>
+                            <span class="tocsublinknumber">
+                                1<tt> </tt>
+                            </span>
+                            <a href="#(part._.Front_.Matter)" class="tocsubseclink" pltdoc="x">Front Matter</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="tocsublinknumber">
+                                1.1<tt> </tt>
+                            </span>
+                            <a href="#(part._.Namespaces)" class="tocsubseclink" pltdoc="x">Namespaces</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="tocsublinknumber">
+                                1.2<tt> </tt>
+                            </span>
+                            <a href="#(part._.Any_elements)" class="tocsubseclink" pltdoc="x">Any elements</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="tocsublinknumber">
+                                2<tt> </tt>
+                            </span>
+                            <a href="#(part._.Applications)" class="tocsubseclink" pltdoc="x">Applications</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="tocsublinknumber">
+                                3<tt> </tt>
+                            </span>
+                            <a href="#(part._.Bindings)" class="tocsubseclink" pltdoc="x">Bindings</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="tocsublinknumber">
+                                3.1<tt> </tt>
+                            </span>
+                            <a href="#(part._.Binding_content)" class="tocsubseclink" pltdoc="x">Binding content</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="tocsublinknumber">
+                                4<tt> </tt>
+                            </span>
+                            <a href="#(part._.Statements)" class="tocsubseclink" pltdoc="x">Statements</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="tocsublinknumber">
+                                4.1<tt> </tt>
+                            </span>
+                            <a href="#(part._.Statement_content)" class="tocsubseclink" pltdoc="x">Statement content</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="tocsublinknumber">
+                                5<tt> </tt>
+                            </span>
+                            <a href="#(part._.Declarations)" class="tocsubseclink" pltdoc="x">Declarations</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="tocsublinknumber">
+                                5.1<tt> </tt>
+                            </span>
+                            <a href="#(part._.Declaration_content)" class="tocsubseclink" pltdoc="x">Declaration content</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="tocsublinknumber">
+                                6<tt> </tt>
+                            </span>
+                            <a href="#(part._.Expressions)" class="tocsubseclink" pltdoc="x">Expressions</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="tocsublinknumber">
+                                7<tt> </tt>
+                            </span>
+                            <a href="#(part._.Literals)" class="tocsubseclink" pltdoc="x">Literals</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="tocsublinknumber">
+                                7.1<tt> </tt>
+                            </span>
+                            <a href="#(part._.Variables)" class="tocsubseclink" pltdoc="x">Variables</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="tocsublinknumber">
+                                7.1.1<tt> </tt>
+                            </span>
+                            <a href="#(part._.Example)" class="tocsubseclink" pltdoc="x">Example</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="tocsublinknumber">
+                                8<tt> </tt>
+                            </span>
+                            <a href="#(part._.Other_elements)" class="tocsubseclink" pltdoc="x">Other elements</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="maincolumn">
+            <div class="main">
+                <h2>
+                    <a name="(part._.D.R.O.X)"/>DROX
+                </h2>
+                <h3>
+                    1<tt> </tt><a name="(part._.Front_.Matter)"/>
+                    Front Matter
+                </h3>
+                <h4>
+                    1.1<tt> </tt><a name="(part._.Namespaces)"/>
+                    Namespaces
+                </h4>
+                <p/>
+                <div class="SIntrapara">In the following document we use these two namespaces frequently:
+                </div>
+                <div class="SIntrapara">
+                    <table cellspacing="0">
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="stt">namespace m = "http://www.w3.org/1998/Math/MathML"</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="stt">namespace drox = "http://drosoft.org/ns/drosera"</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <h4>
+                    1.2<tt> </tt><a name="(part._.Any_elements)"/>
+                    Any elements
+                </h4>
+                <p/>
+                <div class="SIntrapara">
+                    Most of the quotations in this document are written in <a href="http://www.relaxng.org/compact-tutorial-20030326.html">Relax NG Compact Syntax</a>. This is a standard schema language for validation XML documents.
+                    For example, when any element is accepted, we use the following notation:
+                </div>
+                <div class="SIntrapara">
+                    <table cellspacing="0">
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="stt">Any = element * {</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="hspace">    </span><span class="stt">attribute * { text }*,</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="hspace">    </span><span class="stt">mixed { Any }*</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="stt">}</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <h3>
+                    2<tt> </tt><a name="(part._.Applications)"/>
+                    Applications
+                </h3>
+                <p/>
+                <table cellspacing="0">
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Applier = Any</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Apply = element m:apply {</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">Applier,</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">Expr*</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">}</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <h3>
+                    3<tt> </tt><a name="(part._.Bindings)"/>
+                    Bindings
+                </h3>
+                <p/>
+                <table cellspacing="0">
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Binder = Any</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Bind = element m:bind {</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">Binder,</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">BindContent,</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">Expr*</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">}</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <h4>
+                    3.1<tt> </tt><a name="(part._.Binding_content)"/>
+                    Binding content
+                </h4>
+                <p/>
+                <table cellspacing="0">
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Self = element drox:self { Any* }</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">LoopVar = element drox:loop { Any* }</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">BindVar = element m:bvar { Any* }</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">BindDom = element m:domainofapplication { Any }</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">BindKey = element drox:kw { Any* }</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">BindRet = element drox:rv { Any* }</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Throws = element drox:throws { Any* }</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Global = element drox:global { Any* }</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">BindContent = Self? &amp; LoopVar? &amp;</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">BindVar* &amp; BindDom* &amp; BindKey* &amp;</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">BindRet* &amp; Throws* &amp; Global*</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <h3>
+                    4<tt> </tt><a name="(part._.Statements)"/>
+                    Statements
+                </h3>
+                <p/>
+                <table cellspacing="0">
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Stater = Any</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Stmt = element drox:sl {</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">Stater,</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">StmtContent,</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">BindContent?, # if present, then this is a Binding-Statement</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">Expr*</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">}</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <h4>
+                    4.1<tt> </tt><a name="(part._.Statement_content)"/>
+                    Statement content
+                </h4>
+                <p/>
+                <table cellspacing="0">
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">StmtTerm = element drox:st { Var }</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">StmtItem = element drox:si { StmtTerm?, Expr* }</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">StmtElse = element drox:sd { Expr* }</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">StmtContent = StmtTerm? &amp; StmtItem* &amp; StmtElse?</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <h3>
+                    5<tt> </tt><a name="(part._.Declarations)"/>
+                    Declarations
+                </h3>
+                <p/>
+                <table cellspacing="0">
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Declarator = Any</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Decl = element drox:dl {</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">Modifier*,</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">Declarator,</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">DeclContent,</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">BindContent?, # if present, then this is a Binding-Declaration</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">Expr*</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">}</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <h4>
+                    5.1<tt> </tt><a name="(part._.Declaration_content)"/>
+                    Declaration content
+                </h4>
+                <p/>
+                <table cellspacing="0">
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Modifier = element drox:mod { Any }</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">DeclTerm = element drox:dt { Var }</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">DeclItem = element drox:di { DeclTerm?, Expr* }</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">DeclElse = element drox:dd { Expr* }</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">DeclContent = DeclTerm? &amp; DeclItem* &amp; DeclElse?</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <h3>
+                    6<tt> </tt><a name="(part._.Expressions)"/>
+                    Expressions
+                </h3>
+                <p/>
+                <table cellspacing="0">
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    Expr = Lit<span class="hspace">       </span><span class="stt"># Literals</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">     </span>| Apply<span class="hspace">     </span><span class="stt"># Applications</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">     </span>| Bind<span class="hspace">      </span><span class="stt"># Bindings</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">     </span>| Stmt<span class="hspace">      </span><span class="stt"># Statements</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">     </span>| Decl<span class="hspace">      </span><span class="stt"># Declarations</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">     </span>| BindStmt<span class="hspace">  </span><span class="stt"># Binding-Statements</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">     </span>| BindDecl<span class="hspace">  </span><span class="stt"># Binding-Declarations</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <h3>
+                    7<tt> </tt><a name="(part._.Literals)"/>
+                    Literals
+                </h3>
+                <p/>
+                <table cellspacing="0">
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Lit = Var</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">| Sym</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">| Str</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">| Num</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">| Bin</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">| Err</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">| Ref</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">| Sem</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <h4>
+                    7.1<tt> </tt><a name="(part._.Variables)"/>
+                    Variables
+                </h4>
+                <p/>
+                <table cellspacing="0">
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Var = element m:ci {</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">text, (element m:sep { empty }, text)*</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">}</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <h5>
+                    7.1.1<tt> </tt><a name="(part._.Example)"/>
+                    Example
+                </h5>
+                <p/>
+                <div class="SIntrapara">
+                    For example: <span class="stt">java.util.Map.Entry</span> can be written:
+                </div>
+                <div class="SIntrapara">
+                    <table cellspacing="0">
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="stt">&lt;m:ci&gt;java&lt;m:sep/&gt;util&lt;m:sep/&gt;Map&lt;m:sep/&gt;Entry&lt;/m:ci&gt;</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="SIntrapara">or:
+                </div>
+                <div class="SIntrapara">
+                    <table cellspacing="0">
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="stt">&lt;m:apply&gt;</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="hspace">  </span><span class="stt">&lt;m:csymbol cd="prog2"&gt;namespace_selector&lt;/m:csymbol&gt;</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="hspace">  </span><span class="stt">&lt;m:apply&gt;</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="hspace">    </span><span class="stt">&lt;m:csymbol cd="prog2"&gt;namespace_selector&lt;/m:csymbol&gt;</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="hspace">    </span><span class="stt">&lt;m:apply&gt;</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="hspace">      </span><span class="stt">&lt;m:csymbol cd="prog2"&gt;namespace_selector&lt;/m:csymbol&gt;</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="hspace">      </span><span class="stt">&lt;m:ci&gt;java&lt;/m:ci&gt;</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="hspace">      </span><span class="stt">&lt;m:ci&gt;util&lt;/m:ci&gt;</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="hspace">    </span><span class="stt">&lt;/m:apply&gt;</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="hspace">    </span><span class="stt">&lt;m:ci&gt;Map&lt;/m:ci&gt;</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="hspace">  </span><span class="stt">&lt;/m:apply&gt;</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="hspace">  </span><span class="stt">&lt;m:ci&gt;Entry&lt;/m:ci&gt;</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>
+                                    <span class="stt">
+                                        <span class="stt">&lt;/m:apply&gt;</span>
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="SIntrapara">but the former is much shorter.</div><p/>
+                <table cellspacing="0">
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Sym = element m:csymbol {</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">attribute cd { text }, text</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">}</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <p/>
+                <table cellspacing="0">
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Str = element m:cs {</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">attribute type { text }?, text</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">}</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <p/>
+                <table cellspacing="0">
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Num = element m:cn {</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">attribute type { text }?, text,</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">(element m:sep { empty }, text)*</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">}</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <p/>
+                <table cellspacing="0">
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Bin = element m:cbytes {</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="hspace">    </span><span class="stt">text # this must be in Base64 notation</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">}</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <h3>
+                    8<tt> </tt><a name="(part._.Other_elements)"/>
+                    Other elements
+                </h3>
+                <p/>
+                <table cellspacing="0">
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Err = element m:cerror { Any }</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Ref = element m:share { Any* }</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span class="stt">
+                                    <span class="stt">Sem = element m:semantics { Any* }</span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+  </body>
+</html>
